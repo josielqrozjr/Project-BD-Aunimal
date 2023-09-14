@@ -7,5 +7,5 @@ if __name__ == "__main__":
     print("Criando o Banco de Dados!!")
     create_db()
     
-    
+    # Mostrar a tabela selecionada, tipo o SELECT no SQL
     pessoa_list: list[Pessoa] = session.query(Pessoa).all()
