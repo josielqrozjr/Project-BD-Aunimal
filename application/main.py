@@ -8,4 +8,4 @@ if __name__ == "__main__":
     create_db()
     
     # Mostrar a tabela selecionada, tipo o SELECT no SQL
-    pessoa_list: list[Pessoa] = session.query(Pessoa).all()
+    #pessoa_list: list[Pessoa] = session.query(Pessoa).all()
