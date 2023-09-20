@@ -6,7 +6,7 @@ from datetime import datetime, date
 
 class Cliente(Base):
     __tablename__ = "cliente"
-    id: Mapped[int] = mapped_column("id", INTEGER, ForeignKey(Pessoa.id), 
+    id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Pessoa.id_pessoa), 
                                             nullable=True,
                                             autoincrement=True,
                                             primary_key=True)

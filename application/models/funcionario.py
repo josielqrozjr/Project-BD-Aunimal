@@ -1,12 +1,12 @@
-from models import Base
-from sqlalchemy import DATETIME, DATE,VARCHAR, CHAR
+from models import Base, Pessoa
+from sqlalchemy import DATETIME, DATE,VARCHAR, CHAR, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime, date
 
-class Pessoa(Base):
-    __tablename__ = "pessoa"
-    id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, 
+class Funcionario(Base):
+    __tablename__ = "funcionario"
+    id_funcionario: Mapped[int] = mapped_column("id_funcionario", INTEGER, ForeignKey(Pessoa.id_pessoa), 
                                             nullable=False,
                                             autoincrement=True,
                                             primary_key=True)
