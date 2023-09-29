@@ -1,4 +1,4 @@
-from services.database import engine
+from services.db import engine
 from models import *
 
 def create_db():
