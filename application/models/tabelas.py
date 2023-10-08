@@ -22,8 +22,8 @@ def executar():
             tb_servico.executar()
         elif escolha == "2":
             # Importe e execute o módulo correspondente aqui
-            from . import tb_cliente
-            tb_cliente.executar()
+            from . import cliente
+            cliente.executar()
         elif escolha == "3":
             # Importe e execute o módulo correspondente aqui
             from . import tb_funcionario

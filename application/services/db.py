@@ -3,10 +3,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from urllib.parse import quote
 
-instance = f"mysql+pymysql://root:{quote('senhaServer')}@localhost:3306/Aunimal"
+password = "2n#*uB?w!r_O"
+instance = f"mysql+pymysql://root:{quote(password)}@localhost:3306/Auunimal"
 
 if not database_exists(url=instance):
     create_database(url=instance)
 
 engine = create_engine(url=instance, echo=True)
-session = Session(bind=engine, autocommit=False, autoflush=True)
+connection = Session(bind=engine, autocommit=False, autoflush=True)

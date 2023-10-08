@@ -1,4 +1,3 @@
-from services.db import session
 from models import *
 from utils.database_utils import create_db
 import sys
