@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
 def redirecionar_opcao(opcao):
     if opcao == "1":
-        import adm.tabelas as modulo
+        import models.tabelas as modulo
         modulo.executar()
     elif opcao == "4":
         print("Encerrando o programa.")
