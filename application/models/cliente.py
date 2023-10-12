@@ -16,8 +16,9 @@ class Cliente(Base):
     # Relacionamento para acessar os dados de pessoa
     pessoa = relationship('Pessoa', backref='cliente')
 
-    def __init__(self, id_pessoa):
+    def __init__(self, id_pessoa, data_criacao):
         self.id_pessoa = id_pessoa
+        self.data_criacao = data_criacao
 
  
 def listar_clientes(session):  
@@ -26,12 +27,12 @@ def listar_clientes(session):
     
     for cliente, dadosPessoais in dados_clientes:
         print(50 * "-")
-        print(f"ID Cliente: {cliente.id_cliente} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade}")
+        print(f"ID Cliente: {cliente.id_cliente} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nCliente desde: {cliente.data_criacao}")
         
 
 def adicionar_cliente(session):
-    # Coletar informações do associado
-    nome = input("Digite o nome do associado: ")
+    # Coletar informações da pessoa
+    nome = input("Digite o nome do cliente: ")
     nascimento = input("Digite a data de nascimento (AAAA-MM-DD): ")
     cpf = input("Digite o CPF: ")
     rg = input("Digite o RG: ")
@@ -41,7 +42,7 @@ def adicionar_cliente(session):
     nacionalidade = input("Digite o país de origem: ")
     data_criacao = datetime.now()
     
-    # Criar uma nova instância de Associado
+    # Criar uma nova instância de Pessoa
     nova_pessoa = Pessoa(nome = nome, 
                          nascimento = nascimento, 
                          cpf = cpf, 

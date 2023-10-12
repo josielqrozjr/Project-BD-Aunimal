@@ -9,7 +9,8 @@ from services.db import connection
 class Funcionario(Base):
     __tablename__ = "funcionario"
 
-    id_funcionario: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Pessoa.id_pessoa), primary_key=True, nullable=False, autoincrement=True)
+    id_funcionario: Mapped[int] = mapped_column("id_funcionario", INTEGER, primary_key=True, nullable=False, autoincrement=True)
+    id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, ForeignKey(Pessoa.id_pessoa), nullable=False)
     data_admissao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
     profissao: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     salario: Mapped[float] = mapped_column(DECIMAL(10,2), nullable=False)
@@ -17,13 +18,12 @@ class Funcionario(Base):
     # Relacionamento para acessar os dados de pessoa
     pessoa = relationship('Pessoa', backref='funcionario')
 
-    def __init__(self, id_profissao, data_admissao, salario, estado_civil, id_associado):
-        self.id_profissao = id_profissao
-        self.data_admissao = data_admissao
-        self.salario = salario
-        self.estado_civil = estado_civil
-        self.id_associado = id_associado
-
+    def __init__(self, id_pessoa, data_admissao, profissao, salario):
+       self.id_pessoa = id_pessoa
+       self.data_admissao = data_admissao
+       self.profissao = profissao
+       self.salario = salario
+ 
 
 def listar_funcionarios(session):
     # Consultar funcionários com informações de profissões e associados
