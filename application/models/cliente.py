@@ -4,7 +4,6 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 from services.db import connection
-from datetime import datetime
 
 
 class Cliente(Base):
