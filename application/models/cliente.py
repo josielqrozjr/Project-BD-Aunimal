@@ -4,6 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 from services.db import connection
+from datetime import datetime
 
 
 class Cliente(Base):
@@ -20,6 +21,17 @@ class Cliente(Base):
         self.id_pessoa = id_pessoa
         self.data_criacao = data_criacao
 
+
+def tempo_cliente(data_criacao):
+    data_atual = datetime.now()
+    periodo_cliente = data_atual - data_criacao
+
+    dias = periodo_cliente.days % 30
+    meses = (periodo_cliente.days % 365) // 30  # Calcula o número de meses como parte inteira dos dias restantes divididos por 30
+    anos = periodo_cliente.days // 365  # Calcula o número de anos como parte inteira dos dias divididos por 365
+
+    return dias, meses, anos
+
  
 def listar_clientes(session):  
     # Consultar clientes e seus dados da tabela pessoas com informações combinadas
@@ -27,7 +39,11 @@ def listar_clientes(session):
     
     for cliente, dadosPessoais in dados_clientes:
         print(50 * "-")
-        print(f"ID Cliente: {cliente.id_cliente} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nCliente desde: {cliente.data_criacao}")
+        print(f"ID Cliente: {cliente.id_cliente} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nCadastrado em: {cliente.data_criacao}")
+        
+        dias, meses, anos = tempo_cliente(cliente.data_criacao)
+        print(f"Cliente há {dias} dias, {meses} meses e {anos} anos.")
+
         
 
 def adicionar_cliente(session):
