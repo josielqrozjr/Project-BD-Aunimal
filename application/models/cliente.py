@@ -80,8 +80,8 @@ def adicionar_cliente(session):
         novo_cliente = Cliente(id_pessoa=id_pessoa)
         session.add(novo_cliente)
         session.commit()
-        
         print("Cliente adicionado com sucesso!")
+
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()

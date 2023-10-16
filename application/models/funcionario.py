@@ -48,6 +48,7 @@ def adicionar_funcionario(session):
     # Coletar informações do funcionário
     profissao = input("Digite a profissão: ")
     salario = float(input("Digite o salário: "))
+    
 
     # Perguntar se o funcionário tem cadastro
     verificar_cadastro = input("O funcionário já possui cadastro no sistema? (S/N): ").strip().lower()
@@ -58,8 +59,11 @@ def adicionar_funcionario(session):
         pesq_cadastro = session.query(Pessoa).filter_by(cpf=cpf_pessoa).first()
         # Verifique se a pessoa foi encontrada
         if pesq_cadastro:
+            id_pessoa = pesq_cadastro.id_pessoa
+            print(50 * "-")
             print(f"ID Pessoa: {pesq_cadastro.id_pessoa}")
             print(f"Nome: {pesq_cadastro.nome}")
+            print(50 * "-")
 
         else:
             print("Cadastro não encontrado!")
@@ -108,16 +112,17 @@ def adicionar_funcionario(session):
 
 
     # Criar uma nova instância de Funcionario
-    novo_funcionario = Funcionario(data_admissao=datetime.now(),
-                                   profissao=profissao, 
-                                   salario=salario,
-                                   id_pessoa=pessoa_id)
+    novo_funcionario = Funcionario(id_pessoa = id_pessoa,
+                                   data_admissao = datetime.now(),
+                                   profissao = profissao, 
+                                   salario = salario)
 
     try:
         # Adicionar o funcionário à sessão e fazer o commit
         session.add(novo_funcionario)
         session.commit()
         print("Funcionário adicionado com sucesso!")
+
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
@@ -160,7 +165,7 @@ def remover_funcionario(session):
 
 def listar_associados(session):
     # Consultar todos os associados disponíveis
-    associados = session.query(Associado).all()
+    associados = session.query(Pessoa).all()
 
     for associado in associados:
         print(f"ID Associado: {associado.id_associado}, "
