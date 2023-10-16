@@ -26,22 +26,22 @@ class Funcionario(Base):
  
 
 def listar_funcionarios(session):
-    # Consultar funcionários com informações de profissões e associados
+    # Consultar funcionários com informações de profissões e pessoas
     funcionarios = session.query(Funcionario, Pessoa).join(Pessoa).all()
     
-    for funcionario, associado in funcionarios:
+    for funcionario, pessoa in funcionarios:
+        print(50 * "-")
         print(f"ID Funcionário: {funcionario.id_funcionario}, "
+              f"Nome: {pessoa.nome}, "
+              f"Data de nascimento: {pessoa.nascimento}, "
+              f"CPF: {pessoa.cpf}, "
+              f"RG: {pessoa.rg}, "
+              f"Sexo: {pessoa.sexo}, "
+              f"Estado Civil: {pessoa.estado_civil}, "
+              f"Email: {pessoa.email}"
               f"Profissão: {funcionario.profissao}, "
               f"Data Admissão: {funcionario.data_admissao}, "
-              f"Salário: {funcionario.salario}, "
-              f"Estado Civil: {funcionario.estado_civil}, "
-              f"ID Associado: {associado.id_associado}, "
-              f"Nome Associado: {associado.nome}, "
-              f"Nascimento Associado: {associado.nascimento}, "
-              f"CPF Associado: {associado.cpf}, "
-              f"RG Associado: {associado.rg}, "
-              f"Sexo Associado: {associado.sexo}, "
-              f"Email Associado: {associado.email}")
+              f"Salário: {funcionario.salario}, ")
 
 def adicionar_funcionario(session):
     # Coletar informações do funcionário
