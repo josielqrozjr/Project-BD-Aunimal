@@ -46,19 +46,26 @@ def listar_funcionarios(session):
 
 def adicionar_funcionario(session):
     # Coletar informações do funcionário
+    profissao = input("Digite a profissão: ")
     salario = float(input("Digite o salário: "))
-    estado_civil = input("Digite o estado civil: ")
 
-    # Perguntar se o funcionário já é um associado
-    is_associado = input("O funcionário já é um associado? (S/N): ").strip().lower()
+    # Perguntar se o funcionário tem cadastro
+    verificar_cadastro = input("O funcionário já possui cadastro no sistema? (S/N): ").strip().lower()
 
-    if is_associado == "s":
-        # Coletar informações do associado existente
-        listar_associados(session)
-        associado_id = input("Digite o ID do associado existente: ")
+    if verificar_cadastro == "s":
+        # Coletar informações já existentes
+        cpf_pessoa = input("Digite o CPF para consultar: ")
+        pesq_cadastro = session.query(Pessoa).filter_by(cpf=cpf_pessoa).first()
+        # Verifique se a pessoa foi encontrada
+        if pesq_cadastro:
+            print(f"ID Pessoa: {pesq_cadastro.id_pessoa}")
+            print(f"Nome: {pesq_cadastro.nome}")
+
+        else:
+            print("Cadastro não encontrado!")
     else:
-        # Coletar informações do novo associado
-        nome = input("Digite o nome do associado: ")
+        # Coletar informações do novo cadastro em pessoa
+        nome = input("Digite o nome: ")
         nascimento = input("Digite a data de nascimento (AAAA-MM-DD): ")
 
         # Verificar o CPF
@@ -72,51 +79,39 @@ def adicionar_funcionario(session):
         rg = input("Digite o RG: ")
         sexo = input("Digite o sexo (M/F/NI): ")
         email = input("Digite o email: ")
+        est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
         nacionalidade = input("Digite a nacionalidade: ")
         
-        # Criar uma nova instância de Associado
-        novo_associado = Associado(nome=nome, nascimento=nascimento, cpf=cpf, rg=rg, sexo=sexo, email=email,
-                                   nacionalidade=nacionalidade, data_criacao=datetime.now())
+        # Criar uma nova instância de Pessoa
+        nova_pessoa = Pessoa(nome = nome, 
+                            nascimento = nascimento, 
+                            cpf = cpf, 
+                            rg = rg, 
+                            sexo = sexo, 
+                            email = email, 
+                            est_civil = est_civil, 
+                            nacionalidade = nacionalidade, 
+                            data_criacao = datetime.now())
         
         try:
-            # Adicionar o novo associado à sessão e fazer o commit para obter o ID gerado
-            session.add(novo_associado)
+            # Adicionar o novo cadastro à sessão e fazer o commit para obter o ID gerado
+            session.add(nova_pessoa)
             session.commit()
             
             # Obter o ID_associado recém-gerado
-            associado_id = novo_associado.id_associado
-            print(f"Associado adicionado com sucesso. ID Associado: {associado_id}")
+            pessoa_id = nova_pessoa.id_pessoa
+            print(f"Dados cadastrados com sucesso. ID Pessoa: {pessoa_id}")
         except Exception as e:
             # Em caso de erro, faça o rollback e mostre a mensagem de erro
             session.rollback()
             print(f"Erro ao adicionar o associado: {e}")
 
-    # Coletar informações da profissão disponível
-    listar_profissoes(session)
-    profissao_id = input("Digite o ID da profissão desejada: ")
 
     # Criar uma nova instância de Funcionario
-    novo_funcionario = Funcionario(id_profissao=profissao_id, data_admissao=datetime.now(), salario=salario, estado_civil=estado_civil,
-                                   id_associado=associado_id)
-
-    try:
-        # Adicionar o funcionário à sessão e fazer o commit
-        session.add(novo_funcionario)
-        session.commit()
-        print("Funcionário adicionado com sucesso!")
-    except Exception as e:
-        # Em caso de erro, faça o rollback e mostre a mensagem de erro
-        session.rollback()
-        print(f"Erro ao adicionar o funcionário: {e}")
-
-
-    # Coletar informações da profissão disponível
-    listar_profissoes(session)
-    profissao_id = input("Digite o ID da profissão desejada: ")
-
-    # Criar uma nova instância de Funcionario
-    novo_funcionario = Funcionario(id_profissao=profissao_id, data_admissao=datetime.now(), salario=salario, estado_civil=estado_civil,
-                                   id_associado=associado_id)
+    novo_funcionario = Funcionario(data_admissao=datetime.now(),
+                                   profissao=profissao, 
+                                   salario=salario,
+                                   id_pessoa=pessoa_id)
 
     try:
         # Adicionar o funcionário à sessão e fazer o commit
