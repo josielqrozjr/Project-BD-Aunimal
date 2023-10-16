@@ -31,17 +31,18 @@ def listar_funcionarios(session):
     
     for funcionario, pessoa in funcionarios:
         print(50 * "-")
-        print(f"ID Funcionário: {funcionario.id_funcionario}, "
-              f"Nome: {pessoa.nome}, "
-              f"Data de nascimento: {pessoa.nascimento}, "
-              f"CPF: {pessoa.cpf}, "
-              f"RG: {pessoa.rg}, "
-              f"Sexo: {pessoa.sexo}, "
-              f"Estado Civil: {pessoa.estado_civil}, "
+        print(f"ID Funcionário: {funcionario.id_funcionario}"
+              f"Nome: {pessoa.nome}"
+              f"Data de nascimento: {pessoa.nascimento}"
+              f"CPF: {pessoa.cpf}"
+              f"RG: {pessoa.rg}"
+              f"Sexo: {pessoa.sexo}"
+              f"Estado Civil: {pessoa.estado_civil}"
+              f"Nacionalidade: {pessoa.nacionalidade}"
               f"Email: {pessoa.email}"
-              f"Profissão: {funcionario.profissao}, "
-              f"Data Admissão: {funcionario.data_admissao}, "
-              f"Salário: {funcionario.salario}, ")
+              f"Profissão: {funcionario.profissao}"
+              f"Data Admissão: {funcionario.data_admissao}"
+              f"Salário: {funcionario.salario}")
 
 def adicionar_funcionario(session):
     # Coletar informações do funcionário
