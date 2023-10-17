@@ -2,6 +2,7 @@
 
 USE aunimal_hotel_pet;
 
+
 -- -----------------------------------------------------------------------------------
 -- Inserir ao menos 6 registros em cada uma das tabelas do banco de dados.
 -- -----------------------------------------------------------------------------------
@@ -94,21 +95,116 @@ VALUES
 (8800.00, '2023-12-05 16:00:00', '2023-12-01', 9),
 (2800.00, '2023-12-05 10:00:00', '2023-12-01', 10),
 (2860.00, '2023-12-05 18:00:00', '2023-12-01', 11),
-(3200.00, '2023-12-05 18:00:00', '2023-12-01', 12);
+(3200.00, '2023-12-05 18:00:00', '2023-12-01', 12),
+(3230.00, '2023-12-05 18:00:00', '2023-12-01', 12);
 
-SELECT * from pagamento;
+INSERT INTO endereco (data_criacao, cep, logradouro, numero, bairro, cidade, estado, pessoa_id)
+VALUES 
+(NOW(), '80090060', 'Rua Marechal Deodoro', 234, 'Centro', 'Curitiba', 'PR', 1),
+(NOW(), '80100050', 'Avenida República Argentina', 567, 'Água Verde', 'Curitiba', 'PR', 2),
+(NOW(), '80110040', 'Rua Chile', 890, 'Rebouças', 'Curitiba', 'PR', 3),
+(NOW(), '80120030', 'Avenida Iguaçu', 111, 'Água Verde', 'Curitiba', 'PR', 4),
+(NOW(), '80130020', 'Rua Nilo Peçanha', 222, 'Bacacheri', 'Curitiba', 'PR', 5),
+(NOW(), '80020040', 'Rua das Flores', 123, 'Centro', 'Curitiba', 'PR', 6),
+(NOW(), '80030030', 'Avenida Sete de Setembro', 456, 'Batel', 'Curitiba', 'PR', 7),
+(NOW(), '80040020', 'Rua Comendador Araújo', 789, 'Centro', 'Curitiba', 'PR', 8),
+(NOW(), '80050010', 'Rua XV de Novembro', 101, 'Centro', 'Curitiba', 'PR', 9),
+(NOW(), '80060000', 'Rua Visconde de Nácar', 112, 'Centro', 'Curitiba', 'PR', 10),
+(NOW(), '80080070', 'Avenida Silva Jardim', 123, 'Batel', 'Curitiba', 'PR', 11),
+(NOW(), '80070090', 'Avenida João Gualberto', 131, 'Alto da Glória', 'Curitiba', 'PR', 12);
 
+INSERT INTO contato (codigo_pais, codigo_area, numero, id_cliente)
+VALUES 
+(55, 11, 123456789, 1),
+(55, 41, 234567890, 2),
+(55, 51, 345678901, 3),
+(55, 41, 456789012, 4),
+(55, 41, 567890123, 5),
+(55, 41, 678901234, 6),
+(55, 94, 789012345, 7),
+(55, 41, 890123456, 8),
+(55, 41, 901234567, 9),
+(55, 93, 112233445, 10),
+(55, 12, 223344556, 11),
+(55, 41, 334455667, 12);
 
+INSERT INTO cobranca_forma (valor, parcela, id_cobranca, id_forma)
+VALUES 
+(500.00, 'À vista', 1, 1),
+(600.00, 'À vista', 2, 2),
+(700.00, 'À vista', 3, 3),
+(550.00, 'À vista', 4, 4),
+(450.00, 'À vista', 5, 5),
+(880.00, 'À vista', 6, 6);
 
+INSERT INTO funcionario_servico (id_funcionario, id_servico)
+VALUES 
+(11, 1),
+(6, 2),
+(11, 3),
+(11, 4),
+(6, 5),
+(12, 6);
 
+INSERT INTO pet_servico (id_pet, id_servico)
+VALUES 
+(1, 1), (1, 6),
+(2, 2), (2, 5),
+(3, 3), (3, 4),
+(4, 4), (4, 2),
+(5, 5), (5, 2),
+(6, 6), (6, 1);
 
+INSERT INTO pet_reserva (id_pet, id_reserva)
+VALUES 
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6);
+
+INSERT INTO reserva_servico (id_reserva, id_servico)
+VALUES 
+(1, 1),
+(2, 2),
+(3, 3),
+(4, 4),
+(5, 5),
+(6, 6);
 
 
 -- -----------------------------------------------------------------------------------      
 -- Criar 5 instruções de atualização de registros em diferentes tabelas.
 -- -----------------------------------------------------------------------------------
 
+UPDATE funcionario
+SET profissao = 'Gerente Administrativo', salario = 3990.00
+WHERE id_funcionario = 10;
+
+UPDATE contato
+SET numero = 987654321
+WHERE id_cliente = 7;
+
+UPDATE pagamento
+SET mes_referencia = '2023-11-01'
+WHERE id_funcionario = 9;
+
+UPDATE servico
+SET descricao = 'Hospedagem Promocional'
+WHERE id_servico = 3;
+
+UPDATE pessoa
+SET est_civil = 'CASADO'
+WHERE id_pessoa = 2;
+
 
 -- -----------------------------------------------------------------------------------
 -- Criar 5 instruções de exclusão de registros em diferentes tabelas.
 -- -----------------------------------------------------------------------------------
+
+DELETE FROM endereco WHERE pessoa_id = 1;
+DELETE FROM contato WHERE id_cliente = 2;
+DELETE FROM pagamento WHERE id_funcionario = 3;
+DELETE FROM servico WHERE id_servico = 8;
+DELETE FROM funcionario_servico WHERE id_funcionario = 11;
