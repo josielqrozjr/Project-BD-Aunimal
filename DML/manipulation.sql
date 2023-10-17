@@ -68,6 +68,38 @@ VALUES ('Persa'), ('Siamês'), ('Poodle'), ('Bulldog'), ('Golden Retriever'), ('
 INSERT INTO especie (tipo, id_raca) 
 VALUES ('GATO', 1), ('GATO', 2), ('CACHORRO', 3), ('CACHORRO', 4), ('CACHORRO', 5), ('GATO', 6);
 
+INSERT INTO pet (data_criacao, nome, peso, sexo, pelagem, porte, nascimento, descricao, id_especie, cliente_id)
+VALUES 
+(NOW(), 'Tom', 4.5, 'M', 'Cinza', 'M', '2019-02-14', 'Gato adorável', 1, 1),
+(NOW(), 'Luna', 3.2, 'F', 'Preto', 'P', '2020-06-05', 'Gata curiosa', 2, 2),
+(NOW(), 'Max', 8.0, 'M', 'Branco', 'G', '2017-12-18', 'Cachorro brincalhão', 3, 3),
+(NOW(), 'Bella', 5.5, 'F', 'Marrom', 'M', '2018-08-22', 'Cachorra dócil', 4, 4),
+(NOW(), 'Loki', 7.8, 'M', 'Amarelo', 'G', '2016-05-10', 'Cachorro amigável', 5, 5),
+(NOW(), 'Lilo', 6.3, 'M', 'Tricolor', 'M', '2017-09-03', 'Gato brincalhão', 6, 6);
+
+INSERT INTO servico (valor_total, descricao) 
+VALUES 
+(100.00, 'Banho e Tosa'), 
+(30.00, 'Passeio Diário'), 
+(35.00, 'Hospedagem Padrão'), 
+(60.00, 'Hospedagem VIP'), 
+(90.00, 'Treinamento Comportamental'), 
+(180.00, 'Consulta Veterinária');
+
+INSERT INTO pagamento (valor, data_pagamento, mes_referencia, id_funcionario)
+VALUES 
+(2500.00, '2023-10-05 14:00:00', '2023-10-01', 6),
+(8700.00, '2023-11-05 12:00:00', '2023-11-01', 7),
+(8800.00, '2023-11-05 09:00:00', '2023-11-01', 8),
+(8800.00, '2023-12-05 16:00:00', '2023-12-01', 9),
+(2800.00, '2023-12-05 10:00:00', '2023-12-01', 10),
+(2860.00, '2023-12-05 18:00:00', '2023-12-01', 11),
+(3200.00, '2023-12-05 18:00:00', '2023-12-01', 12);
+
+SELECT * from pagamento;
+
+
+
 
 
 
