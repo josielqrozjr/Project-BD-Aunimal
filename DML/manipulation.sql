@@ -195,8 +195,8 @@ SET descricao = 'Hospedagem Promocional'
 WHERE id_servico = 3;
 
 UPDATE pessoa
-SET est_civil = 'CASADO'
-WHERE id_pessoa = 2;
+SET nascimento = '1989-10-30'
+WHERE id_pessoa = 12;
 
 
 -- -----------------------------------------------------------------------------------
