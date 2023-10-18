@@ -31,11 +31,11 @@ GROUP BY pet.nome, raca.classificacao, especie.tipo;
 -- Listar todos os funcionários registrados no hotel;
 -- -----------------------------------------------------------------------------------
 
-SELECT nome AS "Funcionários"
-FROM funcionario
-JOIN pessoa
-ON id_funcionario = id_pessoa
-ORDER BY nome;
+SELECT pss.nome AS "Funcionários", f.profissao AS "Profissão", f.id_funcionario AS "ID"
+FROM funcionario f
+JOIN pessoa pss
+ON f.id_funcionario = pss.id_pessoa
+ORDER BY pss.nome;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que os funcionários registrem reservas para a estadia de animais no hotel;
@@ -70,14 +70,14 @@ VALUES (NOW(), 'Pong', 25.5, 'M', 'Curta', 'M', '2020-10-10', 'Cachorro amigáve
 -- -----------------------------------------------------------------------------------
 
 -- Caso não seja cadastrado:
-
 INSERT INTO pessoa (nome, nascimento, cpf, rg, sexo, email, est_civil, nacionalidade, data_criacao)
 VALUES
 ('Maria Oliveira', '2000-10-20', '23446789012', '8765432', 'F', 'maria.oliveira@outlook.com', 'VIUVO', 'Brasil', NOW());
 
+INSERT INTO cliente VALUES (13, NOW());
+
 -- Caso já possua os dados pessoais cadastrados:
-
-
+INSERT INTO cliente VALUES (7, NOW());
 
 -- -----------------------------------------------------------------------------------
 -- Listar os registros das reservas; 
