@@ -141,9 +141,15 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que os funcionários tenham acesso aos dados dos pets dos clientes;
+-- Obs.: Listar os dados dos pets e seus respectivos clientes.
 -- -----------------------------------------------------------------------------------
 
-
+-- TESTAR, FIZ NA CABEÇA
+SELECT pss.nome "Cliente", pet.*
+FROM pet
+LEFT JOIN cliente cl ON cl.id_cliente = pet.id_cliente
+LEFT JOIN pessoa pss ON pss.id_pessoa = cl.id_cliente
+ORDER BY pss.nome;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir a atualização de dados dos clientes;
