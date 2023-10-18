@@ -48,6 +48,7 @@ def adicionar_funcionario(session):
     # Coletar informações do funcionário
     profissao = input("Digite a profissão: ")
     salario = float(input("Digite o salário: "))
+    pessoa_id = 0;
     
 
     # Perguntar se o funcionário tem cadastro
@@ -140,7 +141,7 @@ def remover_funcionario(session):
 
         print("Funcionários disponíveis para exclusão:")
         for funcionario in funcionarios:
-            print(f"ID Funcionário: {funcionario.id_funcionario}, Nome: {funcionario.associado.nome}")
+            print(f"ID Funcionário: {funcionario.id_funcionario}, Nome: {funcionario.pessoa.nome}")
 
         funcionario_id = input("Digite o ID do funcionário que deseja excluir ou '0' para cancelar: ")
 
@@ -163,18 +164,14 @@ def remover_funcionario(session):
         print(f"Erro ao listar funcionários: {e}")
 
 
-def listar_associados(session):
-    # Consultar todos os associados disponíveis
-    associados = session.query(Pessoa).all()
+def listar_funcionarios(session):
+    # Consultar todos os funcionários disponíveis
+    dados_funcionarios = session.query(Funcionario, Pessoa).join(Pessoa).all()
 
-    for associado in associados:
-        print(f"ID Associado: {associado.id_associado}, "
-              f"Nome: {associado.nome}, "
-              f"Nascimento: {associado.nascimento}, "
-              f"CPF: {associado.cpf}, "
-              f"RG: {associado.rg}, "
-              f"Sexo: {associado.sexo}, "
-              f"Email: {associado.email}")
+    for funcionario, dadosPessoais in dados_funcionarios:
+        print(50 * "-")
+        print(f"ID Cliente: {funcionario.id_cliente} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nProfissão: {funcionario.profissao} \nSalário: {funcionario.salario} \nAdmitido em: {funcionario.data_admissao}")
+        
 
 def executar():
     # Iniciar uma sessão
