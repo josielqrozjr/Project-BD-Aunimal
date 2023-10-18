@@ -80,9 +80,12 @@ INSERT INTO cliente VALUES (13, NOW());
 INSERT INTO cliente VALUES (7, NOW());
 
 -- -----------------------------------------------------------------------------------
--- Listar os registros das reservas; 
+-- Listar os registros das reservas;
+-- Obs.: Trocaremos os ids de cliente e funcionário para o respectivos nomes das pessoas.
 -- -----------------------------------------------------------------------------------
 
+SELECT * FROM reserva
+;
 
 -- -----------------------------------------------------------------------------------
 -- Registrar informações de contato e endereço dos funcionários e clientes; 
