@@ -16,17 +16,16 @@ FROM cliente cl
 JOIN pessoa pss ON cl.id_cliente = pss.id_pessoa
 ORDER BY pss.nome;
 
-
 -- -----------------------------------------------------------------------------------
 -- Listar todos os animais que estão registrados no hotel;
 -- Obs.: Listamos os pets que no momento possuem vínculo ativo com alguma reserva.
 -- -----------------------------------------------------------------------------------
 
-SELECT pet.nome AS "Animais"
-FROM pet
-JOIN pet_reserva pr
-ON pet.id_pet = pr.id_pet;
-
+SELECT pet.nome AS "Nome", raca.classificacao AS "Raça", especie.tipo AS "Espécie"
+FROM raca
+LEFT JOIN especie ON raca.id_raca = especie.id_raca
+LEFT JOIN pet ON especie.id_especie = pet.id_especie
+GROUP BY pet.nome, raca.classificacao, especie.tipo;
 
 -- -----------------------------------------------------------------------------------
 -- Listar todos os funcionários registrados no hotel;
@@ -42,18 +41,28 @@ ORDER BY nome;
 -- Permitir que os funcionários registrem reservas para a estadia de animais no hotel;
 -- -----------------------------------------------------------------------------------
 
-
+INSERT INTO reserva (check_in, checkout, descricao, valor_total, id_cliente, id_funcionario)
+VALUES ('2024-01-28 14:00:00', '2024-02-15 12:00:00', 'Reserva para carnaval', 2700.00, 1, 10);
 
 -- -----------------------------------------------------------------------------------
 -- Registrar datas de check-in e checkout, serviços, tipo de acomodação;
 -- -----------------------------------------------------------------------------------
 
-
+INSERT INTO reserva (check_in, checkout, descricao, valor_total, id_cliente, id_funcionario)
+VALUES ('2023-10-18 14:00:00', '2023-10-23 12:00:00', 'Reserva para aniversário', 1500.00, 1, 10);
+INSERT INTO servico (valor_total, descricao)
+VALUES (700.00, 'Festa Aunimal');
+INSERT INTO reserva_servico (id_reserva, id_servico)
+VALUES (7, 7);
 
 -- -----------------------------------------------------------------------------------
 -- Adicionar atributos para cada animal (nome, raça, idade…);
 -- -----------------------------------------------------------------------------------
 
+INSERT INTO raca (classificacao) VALUES ('Labrador Retriever');
+INSERT INTO especie (tipo, id_raca) VALUES ('CACHORRO', 7);
+INSERT INTO pet (data_criacao, nome, peso, sexo, pelagem, porte, nascimento, descricao, id_especie, cliente_id)
+VALUES (NOW(), 'Pong', 25.5, 'M', 'Curta', 'M', '2020-10-10', 'Cachorro amigável', 7, 3);
 
 
 -- -----------------------------------------------------------------------------------
@@ -97,13 +106,7 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 -- Obs.: Estamos substituindo por criar uma view com os aniersariantes do mês atual.
 -- -----------------------------------------------------------------------------------
 
-CREATE VIEW f_aniversiante AS
-SELECT p.nome AS 'Funcionário', p.nascimento AS 'Aniversário'
-FROM funcionario f
-JOIN pessoa p ON f.id_funcionario = p.id_pessoa
-WHERE MONTH(p.nascimento) = MONTH(CURDATE());
 
-SELECT * FROM f_aniversiante;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir a atualização de dados dos animais;
@@ -145,3 +148,29 @@ SELECT * FROM f_aniversiante;
 -- Recuperar a data que o cliente foi cadastrado, para calcular quanto tempo a pessoa é nosso cliente.
 -- -----------------------------------------------------------------------------------
 
+
+
+-- -----------------------------------------------------------------------------------
+-- VIEWS
+-- -----------------------------------------------------------------------------------
+
+-- Exibir os animais que cada cliente possui
+CREATE VIEW animal_cliente AS
+SELECT pss.nome AS "Cliente", p.nome AS "Pet", r.classificacao AS "Raça"
+FROM cliente c
+LEFT JOIN pessoa pss ON c.id_cliente = pss.id_pessoa
+LEFT JOIN pet p ON pss.id_pessoa = p.cliente_id
+LEFT JOIN especie e ON p.id_especie = e.id_especie
+LEFT JOIN raca r ON e.id_raca = r.id_raca
+ORDER BY pss.nome;
+
+SELECT * FROM animal_cliente;
+
+-- Exibir os funcionários aniversariantes do mês atual
+CREATE VIEW f_aniversiante AS
+SELECT p.nome AS 'Funcionário', p.nascimento AS 'Aniversário'
+FROM funcionario f
+JOIN pessoa p ON f.id_funcionario = p.id_pessoa
+WHERE MONTH(p.nascimento) = MONTH(CURDATE());
+
+SELECT * FROM f_aniversiante;
