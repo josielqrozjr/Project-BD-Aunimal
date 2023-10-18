@@ -24,8 +24,7 @@ ORDER BY pss.nome;
 SELECT pet.nome AS "Nome", raca.classificacao AS "Raça", especie.tipo AS "Espécie"
 FROM raca
 LEFT JOIN especie ON raca.id_raca = especie.id_raca
-LEFT JOIN pet ON especie.id_especie = pet.id_especie
-GROUP BY pet.nome, raca.classificacao, especie.tipo;
+LEFT JOIN pet ON especie.id_especie = pet.id_especie;
 
 -- -----------------------------------------------------------------------------------
 -- Listar todos os funcionários registrados no hotel;
@@ -64,7 +63,6 @@ INSERT INTO especie (tipo, id_raca) VALUES ('CACHORRO', 7);
 INSERT INTO pet (data_criacao, nome, peso, sexo, pelagem, porte, nascimento, descricao, id_especie, cliente_id)
 VALUES (NOW(), 'Pong', 25.5, 'M', 'Curta', 'M', '2020-10-10', 'Cachorro amigável', 7, 3);
 
-
 -- -----------------------------------------------------------------------------------
 -- Registrar novos clientes;
 -- -----------------------------------------------------------------------------------
@@ -92,10 +90,25 @@ JOIN pessoa cl ON r.id_cliente = cl.id_pessoa
 JOIN pessoa func ON r.id_funcionario = func.id_pessoa;
 
 -- -----------------------------------------------------------------------------------
--- Registrar informações de contato e endereço dos funcionários e clientes; 
+-- Registrar informações de contato e endereço dos funcionários e clientes;
+-- Obs.: Vamos substituir o "Registrar" por "Listar".
 -- -----------------------------------------------------------------------------------
 
+-- Listar quantidade de clientes que possuem o mesmo DDD 
+SELECT c.codigo_area "DDD", COUNT(*) AS "Quantidade"
+FROM cliente cli
+JOIN contato c ON cli.id_cliente = c.id_cliente
+GROUP BY c.codigo_area
+ORDER BY COUNT(*);
 
+-- Listar os bairros com no mínimo dois funcionários
+SELECT e.bairro, COUNT(*) AS Quantidade
+FROM endereco e
+JOIN pessoa p ON e.pessoa_id = p.id_pessoa
+LEFT JOIN funcionario f ON p.id_pessoa = f.id_funcionario
+GROUP BY e.bairro
+HAVING Quantidade >= 2
+ORDER BY e.bairro;
 
 -- -----------------------------------------------------------------------------------
 -- Registrar novos funcionários;
@@ -106,7 +119,6 @@ VALUES ('Nome Funcionário', 'YYYY-MM-DD', 'CPF', 'RG', 'M', 'email@example.com'
 
 INSERT INTO funcionario (id_funcionario, data_criacao, profissao, salario) 
 VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
-
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que funcionários tenham acesso aos dados de reservas do sistema;
@@ -137,7 +149,9 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 -- Permitir a atualização de dados dos clientes;
 -- -----------------------------------------------------------------------------------
 
-
+UPDATE cliente
+SET data_criacao = '2022-11-13 10:29:04' 
+WHERE id_cliente = 7;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir a atualização de dados do endereço;
@@ -149,9 +163,14 @@ WHERE id_endereco <= 3;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que os funcionários tenham acesso aos dados de cobrança;
+-- Obs.: Listaremos as cobranças que possuem valor abaixo da média
 -- -----------------------------------------------------------------------------------
 
-
+SELECT valor_total "Valor", data_cobranca "Data", id_cobranca, id_reserva
+FROM cobranca
+GROUP BY id_cobranca
+HAVING valor_total < (SELECT AVG(valor_total) FROM cobranca)
+ORDER BY valor_total DESC;
 
 -- -----------------------------------------------------------------------------------
 -- Recuperar a data que o cliente foi cadastrado para calcular quanto tempo a pessoa é nosso cliente.
