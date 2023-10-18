@@ -84,8 +84,12 @@ INSERT INTO cliente VALUES (7, NOW());
 -- Obs.: Trocaremos os ids de cliente e funcionário para o respectivos nomes das pessoas.
 -- -----------------------------------------------------------------------------------
 
-SELECT * FROM reserva
-;
+SELECT r.id_reserva, r.check_in, r.checkout, r.descricao, r.valor_total, 
+cl.nome AS "Cliente", 
+func.nome AS "Reservado por:"
+FROM reserva r
+JOIN pessoa cl ON r.id_cliente = cl.id_pessoa
+JOIN pessoa func ON r.id_funcionario = func.id_pessoa;
 
 -- -----------------------------------------------------------------------------------
 -- Registrar informações de contato e endereço dos funcionários e clientes; 
@@ -139,7 +143,9 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 -- Permitir a atualização de dados do endereço;
 -- -----------------------------------------------------------------------------------
 
-
+UPDATE endereco 
+SET numero = numero +  1, cep = cep + 2 
+WHERE id_endereco <= 3;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que os funcionários tenham acesso aos dados de cobrança;
@@ -148,10 +154,18 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 
 
 -- -----------------------------------------------------------------------------------
--- Recuperar a data que o cliente foi cadastrado, para calcular quanto tempo a pessoa é nosso cliente.
+-- Recuperar a data que o cliente foi cadastrado para calcular quanto tempo a pessoa é nosso cliente.
 -- -----------------------------------------------------------------------------------
 
-
+SELECT 
+cl.id_cliente "ID",
+pss.nome, 
+cl.data_criacao "Criação", 
+DATEDIFF(CURDATE(), cl.data_criacao) AS "Tempo (dias)"
+FROM cliente cl
+JOIN pessoa pss
+ON pss.id_pessoa = cl.id_cliente
+ORDER BY cl.data_criacao DESC, cl.id_cliente;
 
 -- -----------------------------------------------------------------------------------
 -- VIEWS
