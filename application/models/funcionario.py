@@ -1,9 +1,10 @@
-from models import Base, Pessoa 
+from models import Base, Pessoa
 from sqlalchemy import DECIMAL, ForeignKey, DATETIME, VARCHAR
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 from services.db import connection
+from models.endereco import cadastrar_endereco
 
 
 class Funcionario(Base):
@@ -15,7 +16,7 @@ class Funcionario(Base):
     profissao: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     salario: Mapped[float] = mapped_column(DECIMAL(10,2), nullable=False)
 
-    # Relacionamento para acessar os dados de pessoa
+    # Relacionamento para acessar os dados de outra tabela
     pessoa = relationship('Pessoa', backref='funcionario')
 
     def __init__(self, id_pessoa, data_admissao, profissao, salario):
@@ -57,7 +58,7 @@ def adicionar_funcionario(session):
     if verificar_cadastro == "s":
         # Coletar informações já existentes
         cpf_pessoa = input("Digite o CPF para consultar: ")
-        pesq_cadastro = session.query(Pessoa).filter_by(cpf=cpf_pessoa).first()
+        pesq_cadastro = session.query(Pessoa).filter_by(cpf = cpf_pessoa).first()
         # Verifique se a pessoa foi encontrada
         if pesq_cadastro:
             id_pessoa = pesq_cadastro.id_pessoa
@@ -103,13 +104,17 @@ def adicionar_funcionario(session):
             session.add(nova_pessoa)
             session.commit()
             
-            # Obter o ID_associado recém-gerado
+            # Obter o ID_pessoa recém-gerado
             pessoa_id = nova_pessoa.id_pessoa
+
+            #Usar função para cadastrar endereço
+            cadastrar_endereco(session, pessoa_id)
+
             print(f"Dados cadastrados com sucesso. ID Pessoa: {pessoa_id}")
         except Exception as e:
             # Em caso de erro, faça o rollback e mostre a mensagem de erro
             session.rollback()
-            print(f"Erro ao adicionar o associado: {e}")
+            print(f"Erro ao adicionar o funcionário: {e}")
 
 
     # Criar uma nova instância de Funcionario
@@ -170,7 +175,55 @@ def listar_funcionarios(session):
 
     for funcionario, dadosPessoais in dados_funcionarios:
         print(50 * "-")
-        print(f"ID Cliente: {funcionario.id_cliente} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nProfissão: {funcionario.profissao} \nSalário: {funcionario.salario} \nAdmitido em: {funcionario.data_admissao}")
+        print(f"ID Cliente: {funcionario.id_funcionario} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nProfissão: {funcionario.profissao} \nSalário: {funcionario.salario} \nAdmitido em: {funcionario.data_admissao}")
+
+
+def editar_funcionario(session):
+    
+    funcionario_id = input("Digite o ID do funcionário que deseja editar: ")
+
+    try:
+        # Buscar o funcionário pelo ID
+        funcionario = session.query(Funcionario).filter(Funcionario.id_funcionario == funcionario_id).one()
+
+        # Exibir as informações atuais da pessoa
+        dadosPessoais = funcionario.pessoa
+        print(f"Informações atuais da pessoa:")
+        print(f"Nome: {dadosPessoais.nome}")
+        print(f"Nascimento: {dadosPessoais.nascimento}")
+        print(f"CPF: {dadosPessoais.cpf}")
+        print(f"RG: {dadosPessoais.rg}")
+        print(f"Sexo: {dadosPessoais.sexo}")
+        print(f"Email: {dadosPessoais.email}")
+        print(f"Estado Civil: {dadosPessoais.est_civil}")
+        print(f"Nacionalidade: {dadosPessoais.nacionalidade}")
+
+        # Coletar as novas informações da pessoa
+        nome = input("Digite o novo nome da pessoa: ")
+        nascimento = input("Digite a nova data de nascimento (AAAA-MM-DD): ")
+        cpf = input("Digite o novo CPF: ")
+        rg = input("Digite o novo RG: ")
+        sexo = input("Digite o novo sexo (M/F/NI): ")
+        email = input("Digite o novo email: ")
+        est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
+        nacionalidade = input("Digite a nova nacionalidade: ")
+
+        # Atualizar as informações da pessoa
+        dadosPessoais.nome = nome
+        dadosPessoais.nascimento = nascimento
+        dadosPessoais.cpf = cpf
+        dadosPessoais.rg = rg
+        dadosPessoais.sexo = sexo
+        dadosPessoais.email = email
+        dadosPessoais.est_civil = est_civil
+        dadosPessoais.nacionalidade = nacionalidade
+
+        session.commit()
+        print("Funcionário atualizado com sucesso!")
+    except Exception as e:
+        # Em caso de erro, faça o rollback e mostre a mensagem de erro
+        session.rollback()
+        print(f"Erro ao editar o funcionário: {e}")
         
 
 def executar():
@@ -184,8 +237,9 @@ def executar():
         print("\nOpções:")
         print("1. Listar funcionários")
         print("2. Adicionar funcionário")
-        print("3. Remover funcionário")
-        print("4. Sair")
+        print("3. Editar funcionário")
+        print("4. Remover funcionário")
+        print("5. Sair")
 
         escolha = input("Escolha uma opção: ")
 
@@ -203,8 +257,13 @@ def executar():
             print()
             print(50 * "=")
             print()
-            remover_funcionario(session)
+            editar_funcionario(session)
         elif escolha == "4":
+            print()
+            print(50 * "=")
+            print()
+            remover_funcionario(session)
+        elif escolha == "5":
             print()
             print(50 * "=")
             print()

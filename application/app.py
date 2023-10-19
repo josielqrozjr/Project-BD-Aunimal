@@ -26,7 +26,7 @@ def main():
         
         escolha = input("Escolha uma opção: ")
         
-        if escolha == "8":
+        if escolha == "4":
             print("Encerrando o programa.")
             break
         else:
