@@ -1,10 +1,12 @@
+use aunimal_hotel_pet;
+
 -- -----------------------------------------------------------------------------------
 -- STORED PROCEDURES
 -- -----------------------------------------------------------------------------------
 
--- Excluir registro de clientes e também seus dados pessoais
+-- Excluir registro de clientes e os dados pessoais associados a ele
 DELIMITER $$
-CREATE PROCEDURE deletar_cliente(IN _cliente_id INT)
+CREATE PROCEDURE deletar_cliente (IN _cliente_id INT)
 BEGIN
     DELETE FROM cliente WHERE id_cliente = _cliente_id;
     DELETE FROM pessoa WHERE id_pessoa = _cliente_id;
@@ -13,14 +15,60 @@ BEGIN
 END $$
 DELIMITER ;
 
--- Cadastrar novo cliente
+-- Cadastrar novo funcionário
+DELIMITER %%
+CREATE PROCEDURE formulario_admissao (
+	IN p_nome VARCHAR(100),
+	IN p_nascimento DATE,
+    IN p_cpf CHAR(11),
+    IN p_rg CHAR(11),
+    IN p_sexo ENUM('M', 'F', 'NI'),
+    IN p_email VARCHAR(50),
+    IN p_est_civil ENUM('SOLTEIRO', 'CASADO', 'DIVORCIADO', 'SEPARADO', 'VIUVO'),
+    IN p_nacionalidade VARCHAR(100),
+    IN f_profissao VARCHAR(100),
+    IN f_salario DECIMAL(10, 2),
+    IN c_codigo_pais TINYINT,
+    IN c_codigo_area TINYINT,
+    IN c_numero BIGINT,
+    IN e_cep CHAR(8),
+    IN e_logradouro VARCHAR(50),
+    IN e_numero SMALLINT UNSIGNED,
+    IN e_bairro VARCHAR(50),
+    IN e_cidade VARCHAR(100),
+    IN e_estado VARCHAR(100))
+BEGIN
+    DECLARE pessoa_id INT;
+
+    -- Cadastrar na tabela pessoa
+    INSERT INTO pessoa
+    VALUES (NULL, p_nome, p_nascimento, p_cpf, p_rg, p_sexo, p_email, p_est_civil, p_nacionalidade, NOW());
+
+    -- Obter o último ID da pessoa cadastrada
+    SET pessoa_id = LAST_INSERT_ID();
+
+    -- Cadastrar na tabela contato
+    INSERT INTO contato
+    VALUES (c_codigo_pais, c_codigo_area, c_numero, pessoa_id);
+
+    -- Cadastrar na tabela endereço
+    INSERT INTO endereco
+    VALUES (NULL, NOW(), e_cep, e_logradouro, e_numero, e_bairro, e_cidade, e_estado, pessoa_id);
+
+    -- Cadastrar funcionário
+    INSERT INTO funcionario
+    VALUES (NULL, NOW(), f_profissao, f_salario);
+END %%
+DELIMITER ;
+
 
 
 -- -----------------------------------------------------------------------------------
--- STORED PROCEDURES
+-- FUNCTIONS
 -- -----------------------------------------------------------------------------------
 
 -- Exibir o dia do nascimento
+-- (Prof. usei essa função, pois fui fazendo junto com o senhor no dia da aula e também por ter gostado muito)
 DELIMITER ||
 CREATE FUNCTION dia_nasc (_data DATE)
 RETURNS VARCHAR(200) DETERMINISTIC
