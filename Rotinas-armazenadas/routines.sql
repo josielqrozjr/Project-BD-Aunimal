@@ -4,16 +4,18 @@ use aunimal_hotel_pet;
 -- STORED PROCEDURES
 -- -----------------------------------------------------------------------------------
 
--- Excluir registro de clientes e os dados pessoais associados a ele
+-- Excluir registro de reserva e os dados associados
 DELIMITER $$
-CREATE PROCEDURE deletar_cliente (IN _cliente_id INT)
+CREATE PROCEDURE deletar_reserva (IN _reserva_id INT)
 BEGIN
-    DELETE FROM cliente WHERE id_cliente = _cliente_id;
-    DELETE FROM pessoa WHERE id_pessoa = _cliente_id;
-    DELETE FROM endereco WHERE id_endereco = _cliente_id;
-    DELETE FROM contato WHERE id_contato = _cliente_id;
+    DELETE FROM cobranca WHERE id_reserva = _reserva_id;
+	DELETE FROM pet_reserva WHERE id_reserva = _reserva_id;
+	DELETE FROM reserva_servico WHERE id_reserva = _reserva_id;
+	DELETE FROM reserva WHERE id_reserva = _reserva_id;
 END $$
 DELIMITER ;
+
+CALL deletar_reserva(1);
 
 -- Cadastrar novo funcionário
 DELIMITER %%
