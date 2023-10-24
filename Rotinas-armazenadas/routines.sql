@@ -77,16 +77,26 @@ CREATE PROCEDURE atualizar_pet (
     IN _nascimento DATE,
     IN _descricao TINYTEXT)
 BEGIN
-	UPDATE pet 
-		SET data_criacao =  NOW(),
-			nome = _nome,
-            peso = _peso,
-            sexo = _sexo,
-            pelagem = _pelagem,
-            porte = _porte,
-            nascimento = _nascimento,
-            descricao = _descricao
-	WHERE id_pet = _id_pet;
+	DECLARE analisar_pet INT;
+    DECLARE _id_especie INT;
+    
+	SELECT COUNT(*) INTO analisar_pet FROM pet WHERE id_pet = _id_pet;
+    SELECT id_especie INTO _id_especie FROM pet WHERE id_pet = _id_pet;
+    
+	IF analisar_especie = 1 THEN
+		UPDATE pet 
+			SET data_criacao =  NOW(),
+				nome = _nome,
+				peso = _peso,
+				sexo = _sexo,
+				pelagem = _pelagem,
+				porte = _porte,
+				nascimento = _nascimento,
+				descricao = _descricao
+		WHERE id_pet = _id_pet;
+	ELSE 
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Pet não encontrado, verifique o ID.';
+    END IF;
 END ||
 DELIMITER ;
 
