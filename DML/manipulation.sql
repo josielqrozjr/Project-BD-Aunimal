@@ -184,7 +184,7 @@ WHERE id_funcionario = 10;
 
 UPDATE contato
 SET numero = 987654321
-WHERE id_cliente = 7;
+WHERE id_pessoa = 7;
 
 UPDATE pagamento
 SET mes_referencia = '2023-11-01'
@@ -204,7 +204,7 @@ WHERE id_pessoa = 12;
 -- -----------------------------------------------------------------------------------
 
 DELETE FROM endereco WHERE pessoa_id = 1;
-DELETE FROM contato WHERE id_cliente = 2;
+DELETE FROM contato WHERE id_pessoa = 2;
 DELETE FROM pagamento WHERE id_funcionario = 3;
 DELETE FROM servico WHERE id_servico = 8;
 DELETE FROM funcionario_servico WHERE id_funcionario = 11;
