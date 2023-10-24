@@ -113,7 +113,7 @@ VALUES
 (NOW(), '80080070', 'Avenida Silva Jardim', 123, 'Batel', 'Curitiba', 'PR', 11),
 (NOW(), '80070090', 'Avenida João Gualberto', 131, 'Alto da Glória', 'Curitiba', 'PR', 12);
 
-INSERT INTO contato (codigo_pais, codigo_area, numero, id_cliente)
+INSERT INTO contato (codigo_pais, codigo_area, numero, id_pessoa)
 VALUES 
 (55, 11, 123456789, 1),
 (55, 41, 234567890, 2),
