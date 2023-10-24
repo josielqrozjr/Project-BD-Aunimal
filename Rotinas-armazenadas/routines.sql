@@ -8,13 +8,13 @@ use aunimal_hotel_pet;
 DELIMITER $$
 CREATE PROCEDURE deletar_reserva (IN _reserva_id INT)
 BEGIN
+    DELETE FROM cobranca_forma WHERE id_cobranca = _reserva_id;
     DELETE FROM cobranca WHERE id_reserva = _reserva_id;
 	DELETE FROM pet_reserva WHERE id_reserva = _reserva_id;
 	DELETE FROM reserva_servico WHERE id_reserva = _reserva_id;
 	DELETE FROM reserva WHERE id_reserva = _reserva_id;
 END $$
 DELIMITER ;
-
 CALL deletar_reserva(1);
 
 -- Cadastrar novo funcionário
@@ -61,6 +61,33 @@ BEGIN
     INSERT INTO funcionario
     VALUES (NULL, NOW(), f_profissao, f_salario);
 END %%
+DELIMITER ;
+
+-- Atualizar todos os dados de um pet
+DELIMITER ||
+CREATE PROCEDURE atualizar_pet (
+	IN _id_pet INT,
+	IN _classificacao VARCHAR(100),
+    IN _tipo ENUM('GATO','CACHORRO'),
+    IN _nome VARCHAR(100),
+    IN _peso DECIMAL(5,2),
+    IN _sexo ENUM('M','F'),
+    IN _pelagem VARCHAR(100),
+    IN _porte ENUM('PP','P','M','G','GG'),
+    IN _nascimento DATE,
+    IN _descricao TINYTEXT)
+BEGIN
+	UPDATE pet 
+		SET data_criacao =  NOW(),
+			nome = _nome,
+            peso = _peso,
+            sexo = _sexo,
+            pelagem = _pelagem,
+            porte = _porte,
+            nascimento = _nascimento,
+            descricao = _descricao
+	WHERE id_pet = _id_pet;
+END ||
 DELIMITER ;
 
 
