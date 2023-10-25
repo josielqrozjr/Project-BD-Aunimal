@@ -204,7 +204,7 @@ CREATE VIEW animal_cliente AS
 SELECT pss.nome AS "Cliente", p.nome AS "Pet", r.classificacao AS "Raça"
 FROM cliente c
 LEFT JOIN pessoa pss ON c.id_cliente = pss.id_pessoa
-LEFT JOIN pet p ON pss.id_pessoa = p.cliente_id
+RIGHT JOIN pet p ON pss.id_pessoa = p.cliente_id
 LEFT JOIN especie e ON p.id_especie = e.id_especie
 LEFT JOIN raca r ON e.id_raca = r.id_raca
 ORDER BY pss.nome;
