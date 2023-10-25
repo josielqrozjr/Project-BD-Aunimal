@@ -122,7 +122,6 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que funcionários tenham acesso aos dados de reservas do sistema;
--- Obs.: Estamos substituindo por criar uma view com os aniersariantes do mês atual.
 -- -----------------------------------------------------------------------------------
 
 
@@ -144,10 +143,9 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 -- Obs.: Listar os dados dos pets e seus respectivos clientes.
 -- -----------------------------------------------------------------------------------
 
--- TESTAR, FIZ NA CABEÇA
 SELECT pss.nome "Cliente", pet.*
 FROM pet
-LEFT JOIN cliente cl ON cl.id_cliente = pet.id_cliente
+LEFT JOIN cliente cl ON cl.id_cliente = pet.cliente_id
 LEFT JOIN pessoa pss ON pss.id_pessoa = cl.id_cliente
 ORDER BY pss.nome;
 
