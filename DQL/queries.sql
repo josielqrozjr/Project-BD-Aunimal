@@ -125,7 +125,11 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 -- Listar quantas reservas cada funcionário fez
 -- -----------------------------------------------------------------------------------
 
-SELECT * FROM reserva;
+SELECT p.nome "Funcionário", COUNT(r.id_funcionario) "Quantidade"
+FROM reserva r
+JOIN funcionario f ON r.id_funcionario = f.id_funcionario
+JOIN pessoa p ON f.id_funcionario = p.id_pessoa
+GROUP BY p.nome, r.id_funcionario;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir a atualização de dados dos animais;
