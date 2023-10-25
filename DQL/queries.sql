@@ -122,9 +122,10 @@ VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que funcionários tenham acesso aos dados de reservas do sistema;
+-- Listar quantas reservas cada funcionário fez
 -- -----------------------------------------------------------------------------------
 
-
+SELECT * FROM reserva;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir a atualização de dados dos animais;
