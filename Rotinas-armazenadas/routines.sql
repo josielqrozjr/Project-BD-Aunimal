@@ -17,7 +17,7 @@ END $$
 DELIMITER ;
 CALL deletar_reserva(1);
 
--- Cadastrar novo funcionário
+-- Cadastrar novo funcionário e seus dados pessoais
 DELIMITER %%
 CREATE PROCEDURE formulario_admissao (
 	IN p_nome VARCHAR(100),
@@ -42,22 +42,18 @@ CREATE PROCEDURE formulario_admissao (
 BEGIN
     DECLARE pessoa_id INT;
 
-    -- Cadastrar na tabela pessoa
     INSERT INTO pessoa
     VALUES (NULL, p_nome, p_nascimento, p_cpf, p_rg, p_sexo, p_email, p_est_civil, p_nacionalidade, NOW());
 
     -- Obter o último ID da pessoa cadastrada
     SET pessoa_id = LAST_INSERT_ID();
 
-    -- Cadastrar na tabela contato
     INSERT INTO contato
     VALUES (c_codigo_pais, c_codigo_area, c_numero, pessoa_id);
 
-    -- Cadastrar na tabela endereço
     INSERT INTO endereco
     VALUES (NULL, NOW(), e_cep, e_logradouro, e_numero, e_bairro, e_cidade, e_estado, pessoa_id);
 
-    -- Cadastrar funcionário
     INSERT INTO funcionario
     VALUES (NULL, NOW(), f_profissao, f_salario);
 END %%
