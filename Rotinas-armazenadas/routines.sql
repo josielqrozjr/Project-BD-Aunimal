@@ -97,7 +97,7 @@ BEGIN
 END ||
 DELIMITER ;
 
-CALL 
+CALL atualizar_pet(inserir);
 
 -- -----------------------------------------------------------------------------------
 -- FUNCTIONS
@@ -125,3 +125,26 @@ RETURN dia_semana;
 
 END ||
 DELIMITER ;
+
+-- Faturamento total por serviço
+DELIMITER ||
+CREATE FUNCTION faturamento_servico(id_servico INT)
+RETURNS DECIMAL(10,2) DETERMINISTIC
+BEGIN
+    DECLARE total INT;
+    
+    SELECT SUM(s.valor_total) INTO total
+    FROM servico s
+    JOIN reserva_servico rs ON s.id_servico = rs.id_servico
+    WHERE s.id_servico = id_servico;
+    
+    RETURN total;
+END ||
+DELIMITER ;
+
+SELECT faturamento_servico(6);
+    
+-- -----------------------------------------------------------------------------------
+-- TRIGGERS
+-- -----------------------------------------------------------------------------------
+    
