@@ -247,8 +247,7 @@ RIGHT JOIN pet p ON pss.id_pessoa = p.cliente_id
 LEFT JOIN especie e ON p.id_especie = e.id_especie
 LEFT JOIN raca r ON e.id_raca = r.id_raca
 ORDER BY pss.nome;
-
-SELECT * FROM animal_cliente;
+-- (TESTE) SELECT * FROM animal_cliente;
 
 -- Exibir os funcionários aniversariantes do mês atual
 CREATE VIEW f_aniversariante AS
@@ -256,8 +255,7 @@ SELECT p.nome AS 'Funcionário', p.nascimento AS 'Aniversário'
 FROM funcionario f
 JOIN pessoa p ON f.id_funcionario = p.id_pessoa
 WHERE MONTH(p.nascimento) = MONTH(CURDATE());
-
-SELECT * FROM f_aniversariante;
+-- (TESTE) SELECT * FROM f_aniversariante;
 
 -- Exibir animais e clientes associados as reservas
 CREATE VIEW info_reservas AS
@@ -273,5 +271,4 @@ JOIN pet_reserva pr ON r.id_reserva = pr.id_reserva
 JOIN pet ON pr.id_pet = pet.id_pet
 JOIN especie e ON pet.id_especie = e.id_especie
 JOIN raca rc ON e.id_raca = rc.id_raca;
-
-SELECT * FROM info_reservas;
+-- (TESTE) SELECT * FROM info_reservas;
