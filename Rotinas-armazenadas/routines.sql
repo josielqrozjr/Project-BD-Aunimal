@@ -177,4 +177,31 @@ SELECT busca_cpf('12345678910');
 -- TRIGGERS
 -- -----------------------------------------------------------------------------------
 
+-- Adicionar data de criação de endereço
+DELIMITER $$
+CREATE TRIGGER add_data_endereco
+BEFORE INSERT ON endereco
+FOR EACH ROW
+BEGIN 
+	SET NEW.data_criacao = NOW();
+END $$
+DELIMITER ;
 
+-- Verificar se existe a pessoa antes de associar um contato a ela
+DELIMITER %%
+CREATE TRIGGER verificar_pessoa_ctt
+BEFORE INSERT ON contato
+FOR EACH ROW 
+BEGIN
+	DECLARE verificar_pessoa INT;
+	SET verificar_pessoa = 
+		SELECT COUNT(*) 
+		FROM pessoa pss
+		WHERE pss.id_pessoa = NEW.id_pessoa;
+	IF verificar_pessoa = 0 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID da pessoa não encontrado!'
+	END IF;
+END %%
+DELIMITER ;
+
+-- 
