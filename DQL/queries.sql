@@ -24,9 +24,24 @@ ORDER BY pss.nome;
 SELECT 'Clientes' Tipo, COUNT(*) AS Quantidade
 FROM cliente
 UNION ALL
-SELECT'Funcionários' AS Tipo, COUNT(*) AS Quantidade
+SELECT'Funcionários' Tipo, COUNT(*) AS Quantidade
 FROM funcionario
 GROUP BY Tipo;
+
+-- -----------------------------------------------------------------------------------
+-- Listar o faturamento de reservas por cada cliente;
+-- Obs.: Completar o mínimo de GROUP BY
+-- -----------------------------------------------------------------------------------
+
+SELECT
+    pss.id_pessoa ID_Cliente,
+    pss.nome Nome_Cliente,
+    SUM(r.valor_total) Total_Reservas
+FROM pessoa pss
+JOIN cliente c ON pss.id_pessoa = c.id_cliente
+JOIN reserva r ON c.id_cliente = r.id_cliente
+GROUP BY pss.id_pessoa, pss.nome
+ORDER BY Total_Reservas DESC;
 
 -- -----------------------------------------------------------------------------------
 -- Listar todos os animais que estão registrados no hotel;
@@ -147,13 +162,25 @@ GROUP BY p.nome, r.id_funcionario;
 -- Permitir a atualização de dados dos animais;
 -- -----------------------------------------------------------------------------------
 
-
+UPDATE pet
+SET nome = 'Jeff',
+    peso = 10.5,
+    sexo = 'F',
+    pelagem = 'Branco com preto',
+    porte = 'M',
+    nascimento = '2023-01-01',
+    descricao = 'Ama passear e brincar'
+WHERE id_pet = 4;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir a atualização de dados dos funcionários;
 -- -----------------------------------------------------------------------------------
 
-
+UPDATE funcionario
+SET data_criacao = '2023-10-23 15:00:00',
+    profissao = 'Recepcionista',
+    salario = 2100.00
+WHERE id_funcionario = 1;
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que os funcionários tenham acesso aos dados dos pets dos clientes;
@@ -231,3 +258,20 @@ JOIN pessoa p ON f.id_funcionario = p.id_pessoa
 WHERE MONTH(p.nascimento) = MONTH(CURDATE());
 
 SELECT * FROM f_aniversiante;
+
+-- Exibir animais e clientes associados as reservas
+CREATE VIEW info_reservas AS
+SELECT r.check_in, r.checkout, r.descricao, r.valor_total,
+    pss.nome Cliente,
+    pet.nome Pet,
+    e.tipo "Espécie",
+    rc.classificacao "Raça"
+FROM reserva r
+JOIN cliente c ON r.id_cliente = c.id_cliente
+JOIN pessoa pss ON c.id_cliente = pss.id_pessoa
+JOIN pet_reserva pr ON r.id_reserva = pr.id_reserva
+JOIN pet ON pr.id_pet = pet.id_pet
+JOIN especie e ON pet.id_especie = e.id_especie
+JOIN raca rc ON e.id_raca = rc.id_raca;
+
+SELECT * FROM info_reservas;
