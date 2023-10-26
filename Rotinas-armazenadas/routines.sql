@@ -126,24 +126,37 @@ RETURN dia_semana;
 END ||
 DELIMITER ;
 
+SELECT dia_nasc('2000-11-13');
+
 -- Faturamento total por serviço
 DELIMITER ||
-CREATE FUNCTION faturamento_servico(id_servico INT)
+CREATE FUNCTION faturamento_servico (id_servico INT)
 RETURNS DECIMAL(10,2) DETERMINISTIC
 BEGIN
-    DECLARE total INT;
     
-    SELECT SUM(s.valor_total) INTO total
+    RETURN (SELECT SUM(s.valor_total)
     FROM servico s
     JOIN reserva_servico rs ON s.id_servico = rs.id_servico
-    WHERE s.id_servico = id_servico;
+    WHERE s.id_servico = id_servico);
     
-    RETURN total;
 END ||
 DELIMITER ;
 
 SELECT faturamento_servico(6);
-    
+
+-- Exibir o resultado de uma busca pelo CPF, informar nome e se é cliente ou funcionário
+
+SELECT pss.nome Cliente
+	FROM pessoa pss
+	JOIN cliente c ON pss.id_pessoa = c.id_cliente
+	WHERE pss.cpf = '78901234567';
+
+SELECT pss.nome "Funcionário" 
+	FROM pessoa pss
+    JOIN funcionario f ON pss.id_pessoa = f.id_funcionario
+    WHERE pss.cpf = '12345678910';
+
+
 -- -----------------------------------------------------------------------------------
 -- TRIGGERS
 -- -----------------------------------------------------------------------------------

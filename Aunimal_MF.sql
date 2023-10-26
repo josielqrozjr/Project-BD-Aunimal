@@ -142,10 +142,10 @@ CREATE TABLE IF NOT EXISTS `aunimal_hotel_pet`.`contato` (
   `codigo_pais` TINYINT(3) UNSIGNED ZEROFILL NOT NULL,
   `codigo_area` TINYINT NOT NULL,
   `numero` BIGINT NOT NULL,
-  `id_cliente` INT UNSIGNED NOT NULL,
-  INDEX `fk_contato_pessoa_idx` (`id_cliente` ASC) VISIBLE,
+  `id_pessoa` INT UNSIGNED NOT NULL,
+  INDEX `fk_contato_pessoa_idx` (`id_pessoa` ASC) VISIBLE,
   CONSTRAINT `fk_contato_pessoa`
-    FOREIGN KEY (`id_cliente`)
+    FOREIGN KEY (`id_pessoa`)
     REFERENCES `aunimal_hotel_pet`.`pessoa` (`id_pessoa`)
     ON DELETE RESTRICT
     ON UPDATE NO ACTION)
