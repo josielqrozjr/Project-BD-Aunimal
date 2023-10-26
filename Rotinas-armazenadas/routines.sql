@@ -15,7 +15,7 @@ BEGIN
 	DELETE FROM reserva WHERE id_reserva = _reserva_id;
 END $$
 DELIMITER ;
-CALL deletar_reserva(1);
+-- (TESTE) CALL deletar_reserva(1);
 
 -- Cadastrar novo funcionário e seus dados pessoais
 DELIMITER %%
@@ -55,9 +55,17 @@ BEGIN
     VALUES (NULL, NOW(), e_cep, e_logradouro, e_numero, e_bairro, e_cidade, e_estado, pessoa_id);
 
     INSERT INTO funcionario
-    VALUES (NULL, NOW(), f_profissao, f_salario);
+    VALUES (pessoa_id, NOW(), f_profissao, f_salario);
 END %%
 DELIMITER ;
+
+/* Para testar
+CALL formulario_admissao
+('Luciana Milão Rego', '1992-07-12', '78901234467', '78901201', 'F', 'luciana.milao@outlook.com', 'CASADO', 'Brasil',
+'Assistente Administrativo', 1800.00,
+89, 51, 345678901,
+'80050010', 'Rua XV de Novembro', 79, 'Centro', 'Curitiba', 'PR');
+*/
 
 -- Atualizar todos os dados de um pet
 DELIMITER ||
@@ -96,8 +104,7 @@ BEGIN
     END IF;
 END ||
 DELIMITER ;
-
-CALL atualizar_pet(inserir);
+-- (TESTE) CALL atualizar_pet(inserir);
 
 -- -----------------------------------------------------------------------------------
 -- FUNCTIONS
@@ -125,8 +132,7 @@ RETURN dia_semana;
 
 END ||
 DELIMITER ;
-
-SELECT dia_nasc('2000-11-13');
+-- (TESTE) SELECT dia_nasc('2000-11-13');
 
 -- Faturamento total por serviço
 DELIMITER ||
@@ -141,8 +147,7 @@ BEGIN
     
 END ||
 DELIMITER ;
-
-SELECT faturamento_servico(6);
+-- (TESTE) SELECT faturamento_servico(6);
 
 -- Exibir o resultado de uma busca pelo CPF e informar se é cliente ou funcionário
 DELIMITER ||
@@ -170,8 +175,7 @@ BEGIN
 	END IF;
 END ||
 DELIMITER ;
-
-SELECT busca_cpf('12345678910');
+-- (TESTE) SELECT busca_cpf('12345678910');
 
 -- -----------------------------------------------------------------------------------
 -- TRIGGERS

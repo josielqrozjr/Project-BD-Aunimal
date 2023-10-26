@@ -251,13 +251,13 @@ ORDER BY pss.nome;
 SELECT * FROM animal_cliente;
 
 -- Exibir os funcionários aniversariantes do mês atual
-CREATE VIEW f_aniversiante AS
+CREATE VIEW f_aniversariante AS
 SELECT p.nome AS 'Funcionário', p.nascimento AS 'Aniversário'
 FROM funcionario f
 JOIN pessoa p ON f.id_funcionario = p.id_pessoa
 WHERE MONTH(p.nascimento) = MONTH(CURDATE());
 
-SELECT * FROM f_aniversiante;
+SELECT * FROM f_aniversariante;
 
 -- Exibir animais e clientes associados as reservas
 CREATE VIEW info_reservas AS
