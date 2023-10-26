@@ -144,20 +144,36 @@ DELIMITER ;
 
 SELECT faturamento_servico(6);
 
--- Exibir o resultado de uma busca pelo CPF, informar nome e se é cliente ou funcionário
+-- Exibir o resultado de uma busca pelo CPF e informar se é cliente ou funcionário
+DELIMITER ||
+CREATE FUNCTION busca_cpf(cpf_pessoa CHAR(11))
+RETURNS VARCHAR(50) DETERMINISTIC
+BEGIN
+	DECLARE id_pessoa_ INT;
+    DECLARE is_cliente INT; 
+    DECLARE is_funcionario INT;
+    SELECT id_pessoa INTO id_pessoa_ FROM pessoa WHERE cpf = cpf_pessoa;
+    SELECT COUNT(id_cliente) INTO is_cliente FROM cliente WHERE id_cliente = id_pessoa_;
+    SELECT COUNT(id_funcionario) INTO is_funcionario FROM funcionario WHERE id_funcionario = id_pessoa_;
+    
+    IF is_cliente = 1 AND is_funcionario = 1 THEN
+		RETURN (SELECT ('Ambos'));
+	
+    ELSEIF is_cliente = 1 THEN
+			RETURN (SELECT ('Cliente'));
+            
+	ELSEIF is_funcionario = 1 THEN
+			RETURN (SELECT ('Funcionário'));
+	
+	ELSE 
+    RETURN (SELECT ('Pessoa ainda não definida como cliente ou funcionário!'));
+	END IF;
+END ||
+DELIMITER ;
 
-SELECT pss.nome Cliente
-	FROM pessoa pss
-	JOIN cliente c ON pss.id_pessoa = c.id_cliente
-	WHERE pss.cpf = '78901234567';
-
-SELECT pss.nome "Funcionário" 
-	FROM pessoa pss
-    JOIN funcionario f ON pss.id_pessoa = f.id_funcionario
-    WHERE pss.cpf = '12345678910';
-
+SELECT busca_cpf('12345678910');
 
 -- -----------------------------------------------------------------------------------
 -- TRIGGERS
 -- -----------------------------------------------------------------------------------
-    
+
