@@ -92,7 +92,7 @@ BEGIN
                 id_especie = _id_especie
 		WHERE id_pet = _id_pet;
 	ELSE 
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Pet não encontrado, verifique o ID.';
+    SELECT ('Pet não encontrado, verifique o ID!');
     END IF;
 END ||
 DELIMITER ;
@@ -187,6 +187,12 @@ BEGIN
 END $$
 DELIMITER ;
 
+/* Para testar
+INSERT INTO endereco (cep, logradouro, numero, bairro, cidade, estado, pessoa_id)
+VALUES 
+('50090060', 'Rua Marechal Deodoro', 234, 'Centro', 'Curitiba', 'PR', 7);
+*/
+
 -- Verificar se existe a pessoa antes de associar um contato a ela
 DELIMITER %%
 CREATE TRIGGER verificar_pessoa_ctt
@@ -195,13 +201,46 @@ FOR EACH ROW
 BEGIN
 	DECLARE verificar_pessoa INT;
 	SET verificar_pessoa = 
-		SELECT COUNT(*) 
+		(SELECT COUNT(*) 
 		FROM pessoa pss
-		WHERE pss.id_pessoa = NEW.id_pessoa;
+		WHERE pss.id_pessoa = NEW.id_pessoa);
 	IF verificar_pessoa = 0 THEN
-		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID da pessoa não encontrado!'
-	END IF;
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID da pessoa não encontrado!';
+	END IF ;
 END %%
 DELIMITER ;
 
--- 
+/* Para testar
+INSERT INTO contato
+VALUES (55, 12, 133456789, 20);
+*/
+
+-- Verificar pet e serviço antes de adicionar em pet_servico
+DELIMITER ||
+CREATE TRIGGER verificar_pet_serv
+BEFORE INSERT ON pet_servico
+FOR EACH ROW
+BEGIN
+	DECLARE ver_pet INT;
+    DECLARE ver_servico INT;
+    
+    SET ver_pet = 
+		(SELECT COUNT(*) 
+        FROM pet 
+        WHERE id_pet = NEW.id_pet);
+    SET ver_servico = 
+		(SELECT COUNT(*) 
+        FROM servico 
+        WHERE id_servico = NEW.id_servico);
+    
+    IF ver_pet = 0 OR ver_servico = 0 THEN
+		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'ID pet ou serviço não encontrado!';
+    END IF;
+END ||
+DELIMITER ;
+
+/* Para testar
+INSERT INTO pet_servico (id_pet, id_servico)
+VALUES 
+(4, 33);
+*/
