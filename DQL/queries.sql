@@ -17,6 +17,18 @@ JOIN pessoa pss ON cl.id_cliente = pss.id_pessoa
 ORDER BY pss.nome;
 
 -- -----------------------------------------------------------------------------------
+-- Listar quantidade de clientes e funcionários registrados no hotel;
+-- Obs.: Completar o mínimo de GROUP BY
+-- -----------------------------------------------------------------------------------
+
+SELECT 'Clientes' Tipo, COUNT(*) AS Quantidade
+FROM cliente
+UNION ALL
+SELECT'Funcionários' AS Tipo, COUNT(*) AS Quantidade
+FROM funcionario
+GROUP BY Tipo;
+
+-- -----------------------------------------------------------------------------------
 -- Listar todos os animais que estão registrados no hotel;
 -- Obs.: Listamos os pets que no momento possuem vínculo ativo com alguma reserva.
 -- -----------------------------------------------------------------------------------
@@ -114,11 +126,11 @@ ORDER BY e.bairro;
 -- Registrar novos funcionários;
 -- -----------------------------------------------------------------------------------
 
-INSERT INTO pessoa (nome, nascimento, cpf, rg, sexo, email, est_civil, nacionalidade, data_criacao) 
-VALUES ('Nome Funcionário', 'YYYY-MM-DD', 'CPF', 'RG', 'M', 'email@example.com', 'SOLTEIRO', 'Brasil', 'YYYY-MM-DD HH:MM:SS');
+INSERT INTO pessoa
+VALUES (NULL, 'Renata Lo Prete', '1985-05-15', '12345678901', '9876543', 'M', 'renata.prete@globo.com', 'SOLTEIRO', 'Brasil', NOW());
 
-INSERT INTO funcionario (id_funcionario, data_criacao, profissao, salario) 
-VALUES (LAST_INSERT_ID(), 'YYYY-MM-DD HH:MM:SS', 'Profissão', Salario);
+INSERT INTO funcionario
+VALUES (LAST_INSERT_ID(), NOW(), 'Analista de Dados', 5000.00);
 
 -- -----------------------------------------------------------------------------------
 -- Permitir que funcionários tenham acesso aos dados de reservas do sistema;

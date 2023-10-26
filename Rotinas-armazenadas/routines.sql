@@ -84,7 +84,6 @@ BEGIN
 	SELECT COUNT(*) INTO analisar_pet FROM pet WHERE id_pet = _id_pet;
     SELECT COUNT(*) INTO analisar_especie FROM especie WHERE id_especie = _id_especie;
     
-    
 	IF analisar_pet = 1 AND analisar_especie = 1 THEN
 		UPDATE pet 
 			SET nome = _nome,
