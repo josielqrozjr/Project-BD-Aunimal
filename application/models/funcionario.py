@@ -5,7 +5,7 @@ from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 from services.db import connection
 from models.endereco import cadastrar_endereco
-
+from models.pessoa import listar_pessoa, buscar_pessoa, cadastrar_pessoa
 
 class Funcionario(Base):
     __tablename__ = "funcionario"
@@ -16,8 +16,6 @@ class Funcionario(Base):
     profissao: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     salario: Mapped[float] = mapped_column(DECIMAL(10,2), nullable=False)
 
-    # Relacionamento para acessar os dados de outra tabela
-    pessoa = relationship('Pessoa', backref='funcionario')
 
     def __init__(self, id_pessoa, data_admissao, profissao, salario):
        self.id_pessoa = id_pessoa
@@ -28,94 +26,36 @@ class Funcionario(Base):
 
 def listar_funcionarios(session):
     # Consultar funcionários com informações de profissões e pessoas
-    funcionarios = session.query(Funcionario, Pessoa).join(Pessoa).all()
+    funcionarios = session.query(Funcionario).all()
     
-    for funcionario, pessoa in funcionarios:
-        print(50 * "-")
+    for funcionario in funcionarios:
+        print(50 * "=")
         print(f"ID Funcionário: {funcionario.id_funcionario}"
-              f"Nome: {pessoa.nome}"
-              f"Data de nascimento: {pessoa.nascimento}"
-              f"CPF: {pessoa.cpf}"
-              f"RG: {pessoa.rg}"
-              f"Sexo: {pessoa.sexo}"
-              f"Estado Civil: {pessoa.estado_civil}"
-              f"Nacionalidade: {pessoa.nacionalidade}"
-              f"Email: {pessoa.email}"
               f"Profissão: {funcionario.profissao}"
               f"Data Admissão: {funcionario.data_admissao}"
               f"Salário: {funcionario.salario}")
+        
+        # Chamar a função de listar pessoa conforme o id do loop
+        listar_pessoa(session, funcionario.id_funcionario)
 
 def adicionar_funcionario(session):
     # Coletar informações do funcionário
     profissao = input("Digite a profissão: ")
     salario = float(input("Digite o salário: "))
-    pessoa_id = 0;
-    
 
     # Perguntar se o funcionário tem cadastro
     verificar_cadastro = input("O funcionário já possui cadastro no sistema? (S/N): ").strip().lower()
 
     if verificar_cadastro == "s":
         # Coletar informações já existentes
-        cpf_pessoa = input("Digite o CPF para consultar: ")
-        pesq_cadastro = session.query(Pessoa).filter_by(cpf = cpf_pessoa).first()
-        # Verifique se a pessoa foi encontrada
-        if pesq_cadastro:
-            id_pessoa = pesq_cadastro.id_pessoa
-            print(50 * "-")
-            print(f"ID Pessoa: {pesq_cadastro.id_pessoa}")
-            print(f"Nome: {pesq_cadastro.nome}")
-            print(50 * "-")
+        #cpf_pessoa = input("Digite o CPF para consultar: ")
+        #pesq_cadastro = session.query(Pessoa).filter_by(cpf = cpf_pessoa).first()
 
-        else:
-            print("Cadastro não encontrado!")
-    else:
-        # Coletar informações do novo cadastro em pessoa
-        nome = input("Digite o nome: ")
-        nascimento = input("Digite a data de nascimento (AAAA-MM-DD): ")
-
-        # Verificar o CPF
-        while True:
-            cpf = input("Digite o CPF (11 dígitos): ")
-            if len(cpf) == 11 and cpf.isdigit():
-                break
-            else:
-                print("CPF inválido. O CPF deve conter exatamente 11 dígitos numéricos.")
-
-        rg = input("Digite o RG: ")
-        sexo = input("Digite o sexo (M/F/NI): ")
-        email = input("Digite o email: ")
-        est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
-        nacionalidade = input("Digite a nacionalidade: ")
-        
-        # Criar uma nova instância de Pessoa
-        nova_pessoa = Pessoa(nome = nome, 
-                            nascimento = nascimento, 
-                            cpf = cpf, 
-                            rg = rg, 
-                            sexo = sexo, 
-                            email = email, 
-                            est_civil = est_civil, 
-                            nacionalidade = nacionalidade, 
-                            data_criacao = datetime.now())
-        
-        try:
-            # Adicionar o novo cadastro à sessão e fazer o commit para obter o ID gerado
-            session.add(nova_pessoa)
-            session.commit()
-            
-            # Obter o ID_pessoa recém-gerado
-            pessoa_id = nova_pessoa.id_pessoa
-
-            #Usar função para cadastrar endereço
-            cadastrar_endereco(session, pessoa_id)
-
-            print(f"Dados cadastrados com sucesso. ID Pessoa: {pessoa_id}")
-        except Exception as e:
-            # Em caso de erro, faça o rollback e mostre a mensagem de erro
-            session.rollback()
-            print(f"Erro ao adicionar o funcionário: {e}")
-
+        # Chamar função para pesquisar a pessoa pelo CPF
+        id_pessoa = buscar_pessoa(session)
+    
+    else
+        cadastrar_pessoa(session)
 
     # Criar uma nova instância de Funcionario
     novo_funcionario = Funcionario(id_pessoa = id_pessoa,

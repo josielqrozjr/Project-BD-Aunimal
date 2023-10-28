@@ -12,9 +12,7 @@ class Cliente(Base):
     id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, nullable=False, autoincrement=True, primary_key=True)
     id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, ForeignKey(Pessoa.id_pessoa), nullable=False)
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
-    
-    # Relacionamento para acessar os dados de pessoa
-    pessoa = relationship('Pessoa', backref='cliente')
+
 
     def __init__(self, id_pessoa, data_criacao):
         self.id_pessoa = id_pessoa
