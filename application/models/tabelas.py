@@ -1,25 +1,23 @@
 def executar():
     while True:
         print(50*"=")
-        print("")
-        print("TELA ADM")
-        print("")
+        print("\nSYSTEM - AUNIMAL HOTEL PET \n")
         print("\nOpções:")
         print("1. Serviços")
         print("2. Clientes")
-        print("3. Funcionario")
-        print("4. Profissao")
-        print("5. pet")
-        print("6. raca")
-        print("7. especie")
+        print("3. Funcionário")
+        print("4. Profissão")
+        print("5. Pet")
+        print("6. Raça")
+        print("7. Espécie")
         print("8. Sair")
         
         escolha = input("Escolha uma opção: ")
         
         if escolha == "1":
             # Importe e execute o módulo correspondente aqui
-            from . import tb_servico
-            tb_servico.executar()
+            from . import servico
+            servico.executar()
         elif escolha == "2":
             # Importe e execute o módulo correspondente aqui
             from . import cliente
@@ -30,20 +28,20 @@ def executar():
             funcionario.executar()
         elif escolha == "4":
             # Importe e execute o módulo correspondente aqui
-            from . import tb_profissao
-            tb_profissao.executar()
+            from . import profissao
+            profissao.executar()
         elif escolha == "5":
             # Importe e execute o módulo correspondente aqui
-            from . import tb_pet
-            tb_pet.executar()
+            from . import pet
+            pet.executar()
         elif escolha == "6":
             # Importe e execute o módulo correspondente aqui
-            from . import tb_raca
-            tb_raca.executar()
+            from . import raca
+            raca.executar()
         elif escolha == "7":
             # Importe e execute o módulo correspondente aqui
-            from . import tb_especie
-            tb_especie.executar()
+            from . import especie
+            especie.executar()
         
         elif escolha == "8":
             print("Encerrando o programa.")
