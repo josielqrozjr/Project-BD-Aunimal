@@ -43,7 +43,8 @@ def listar_pessoa(session, id):
     dados_pessoa = session.query(Pessoa).filter(Pessoa.id_pessoa == id)
     
     for pessoa in dados_pessoa:
-        print(f"Nome: {pessoa.nome}" 
+        print(50 * "=")
+        print(f"\nNome: {pessoa.nome}" 
               f"\nData de nascimento: {pessoa.nascimento}"
               f"\nCPF: {pessoa.cpf}"
               f"\nRG: {pessoa.rg}"

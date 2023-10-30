@@ -29,14 +29,15 @@ def listar_funcionarios(session):
     funcionarios = session.query(Funcionario).all()
     
     for funcionario in funcionarios:
-        print(50 * "=")
-        print(f"\nID Funcionário: {funcionario.id_funcionario}"
-              f"\nProfissão: {funcionario.profissao}"
-              f"\nData Admissão: {funcionario.data_admissao}"
-              f"\nSalário: {funcionario.salario}")
-        
+
         # Chamar a função de listar pessoa conforme o id
         listar_pessoa(session, funcionario.id_funcionario)
+
+        print(f"Profissão: {funcionario.profissao}"
+              f"\nData Admissão: {funcionario.data_admissao}"
+              f"\nSalário: {funcionario.salario}"
+              f"\nID Funcionário: {funcionario.id_funcionario}\n")
+        print(50 * "=")
 
 
 def adicionar_funcionario(session):
