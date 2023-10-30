@@ -20,6 +20,7 @@ class Endereco(Base):
 
 def cadastrar_endereco(session, pessoa_id):
     
+    print(50 * "=")
     cep = input("Digite o CEP: ")
     logradouro = input("Digite o logradouro: ")
     numero = input("Digite o número: ")
@@ -43,7 +44,9 @@ def cadastrar_endereco(session, pessoa_id):
             
         # Obter o ID_endereco recém-gerado
         id_endereco = novo_endereco.id_endereco
+        print(50 * "=")
         print(f"Dados cadastrados com sucesso. ID Endereço: {id_endereco}")
+        print(50 * "=")
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
