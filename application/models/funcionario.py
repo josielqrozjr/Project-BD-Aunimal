@@ -44,6 +44,9 @@ def adicionar_funcionario(session):
     pessoa_id = buscar_pessoa(session)
 
     # Coletar informações do funcionário
+    print(50 * '=')
+    print('FORMULÁRIO PARA CADASTRO DE FUNCIONÁRIO')
+    print(50 * '=')
     profissao = input("Digite a profissão: ")
     salario = float(input("Digite o salário: "))
 

@@ -36,7 +36,6 @@ class Pessoa(Base):
        self.data_criacao = data_criacao'''
 
 
-
 # Listar as pessoas que estão associadas a tabela passada no parâmetro
 def listar_pessoa(session, id):
     
@@ -83,7 +82,7 @@ def buscar_pessoa(session):
         else:
             print(50 * '=')
             print("Cadastro não encontrado!")
-            
+
             return cadastrar_pessoa(session)
         
     else: return cadastrar_pessoa(session)
@@ -93,7 +92,7 @@ def buscar_pessoa(session):
 def cadastrar_pessoa(session):
     
     print(50 * '=')
-    print('Formulário para cadastro de pessoa')
+    print('FORMULÁRIO PARA CADASTRO DE PESSOA')
     print(50 * '=')
 
     # Coletar dados do novo cadastro em pessoa
@@ -130,8 +129,6 @@ def cadastrar_pessoa(session):
         session.add(nova_pessoa)
         session.commit()
 
-
-            
         # Obter o ID_pessoa recém-gerado
         id_gerado = nova_pessoa.id_pessoa
 
@@ -139,6 +136,7 @@ def cadastrar_pessoa(session):
         from models.endereco import cadastrar_endereco
         cadastrar_endereco(session, id_gerado)
 
+        print(50 * "=")
         print(f"Dados cadastrados com sucesso. ID Pessoa: {id_gerado}")
         return id_gerado
         
