@@ -1,10 +1,9 @@
-from models import Base 
+from models import Base
 from sqlalchemy import DATETIME, DATE, VARCHAR, CHAR, Enum
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime, date
 from typing import Literal
-from models.endereco import cadastrar_endereco
 import sqlalchemy
 
 
@@ -24,7 +23,17 @@ class Pessoa(Base):
     est_civil: Mapped[Est_civil] = mapped_column(sqlalchemy.Enum('SOLTEIRO','CASADO','DIVORCIADO','SEPARADO','VIUVO', name = "est_civil_enum"), nullable=False)
     nacionalidade: Mapped[str] = mapped_column(VARCHAR(100), nullable=False, default='BRASIL')
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
-
+    
+    '''def __init__(self, nome, nascimento, cpf, rg, sexo, email, est_civil, nacionalidade, data_criacao):
+       self.nome = nome
+       self.nascimento = nascimento
+       self.cpf = cpf
+       self.rg = rg
+       self.sexo = sexo 
+       self.email = email 
+       self.est_civil = est_civil
+       self.nacionalidade = nacionalidade
+       self.data_criacao = data_criacao'''
 
 
 
@@ -48,23 +57,36 @@ def listar_pessoa(session, id):
 # Função para buscar pessoa pelo CPF
 def buscar_pessoa(session):
 
-    cpf_pessoa = input("Digite o CPF para consultar: ")
-    
-    # Consultar pessoa por CPF
-    pessoa_query = session.query(Pessoa).filter(Pessoa.cpf == cpf_pessoa)
+    # Perguntar se possui cadastro
+    verificar_cadastro = input("A pessoa já possui cadastro no sistema? (S/N): ").strip().lower()
 
-    # Verifique se a pessoa foi encontrada
-    if pessoa_query:
-        id_pessoa = pessoa_query.id_pessoa
-        print(50 * "=")
-        print(f"ID Pessoa: {pessoa_query.id_pessoa}")
-        print(f"Nome: {pessoa_query.nome}")
-        print(50 * "=")
+    if verificar_cadastro == "s":
+        # Coletar informações já existentes
+        #cpf_pessoa = input("Digite o CPF para consultar: ")
+        #pesq_cadastro = session.query(Pessoa).filter_by(cpf = cpf_pessoa).first()
 
-        return id_pessoa
+        cpf_pessoa = input("Digite o CPF para consultar: ")
     
-    else:
-        print("Cadastro não encontrado!")
+        # Consultar pessoa por CPF
+        pessoa_query = session.query(Pessoa).filter(Pessoa.cpf == cpf_pessoa).first()
+
+        # Verifique se a pessoa foi encontrada
+        if pessoa_query:
+            id_pessoa = pessoa_query.id_pessoa
+            print(50 * "=")
+            print(f"ID Pessoa: {pessoa_query.id_pessoa}")
+            print(f"Nome: {pessoa_query.nome}")
+            print(50 * "=")
+
+            return id_pessoa
+    
+        else:
+            print(50 * '=')
+            print("Cadastro não encontrado!")
+            
+            return cadastrar_pessoa(session)
+        
+    else: return cadastrar_pessoa(session)
     
 
 # Função para cadastrar pessoa
@@ -108,12 +130,17 @@ def cadastrar_pessoa(session):
         session.add(nova_pessoa)
         session.commit()
 
-        # Chamar função para cadastrar endereço
-        cadastrar_endereco(session)
+
             
         # Obter o ID_pessoa recém-gerado
         id_gerado = nova_pessoa.id_pessoa
+
+        # Chamar função para cadastrar endereço
+        from models.endereco import cadastrar_endereco
+        cadastrar_endereco(session, id_gerado)
+
         print(f"Dados cadastrados com sucesso. ID Pessoa: {id_gerado}")
+        return id_gerado
         
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro

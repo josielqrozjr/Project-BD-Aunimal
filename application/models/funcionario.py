@@ -5,7 +5,7 @@ from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 from services.db import connection
 from models.endereco import cadastrar_endereco
-from models.pessoa import listar_pessoa, buscar_pessoa, cadastrar_pessoa
+from models.pessoa import listar_pessoa, buscar_pessoa
 
 class Funcionario(Base):
     __tablename__ = "funcionario"
@@ -38,27 +38,17 @@ def listar_funcionarios(session):
         # Chamar a função de listar pessoa conforme o id do loop
         listar_pessoa(session, funcionario.id_funcionario)
 
+
 def adicionar_funcionario(session):
+
+    pessoa_id = buscar_pessoa(session)
+
     # Coletar informações do funcionário
     profissao = input("Digite a profissão: ")
     salario = float(input("Digite o salário: "))
 
-    # Perguntar se o funcionário tem cadastro
-    verificar_cadastro = input("O funcionário já possui cadastro no sistema? (S/N): ").strip().lower()
-
-    if verificar_cadastro == "s":
-        # Coletar informações já existentes
-        #cpf_pessoa = input("Digite o CPF para consultar: ")
-        #pesq_cadastro = session.query(Pessoa).filter_by(cpf = cpf_pessoa).first()
-
-        # Chamar função para pesquisar a pessoa pelo CPF
-        id_pessoa = buscar_pessoa(session)
-    
-    else
-        cadastrar_pessoa(session)
-
     # Criar uma nova instância de Funcionario
-    novo_funcionario = Funcionario(id_pessoa = id_pessoa,
+    novo_funcionario = Funcionario(id_pessoa = pessoa_id,
                                    data_admissao = datetime.now(),
                                    profissao = profissao, 
                                    salario = salario)
