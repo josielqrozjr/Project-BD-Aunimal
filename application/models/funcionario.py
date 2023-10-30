@@ -35,7 +35,7 @@ def listar_funcionarios(session):
               f"Data Admissão: {funcionario.data_admissao}"
               f"Salário: {funcionario.salario}")
         
-        # Chamar a função de listar pessoa conforme o id do loop
+        # Chamar a função de listar pessoa conforme o id
         listar_pessoa(session, funcionario.id_funcionario)
 
 
