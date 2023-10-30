@@ -43,14 +43,14 @@ def listar_pessoa(session, id):
     dados_pessoa = session.query(Pessoa).filter(Pessoa.id_pessoa == id)
     
     for pessoa in dados_pessoa:
-        print(f"Nome: {pessoa.nome}"
-              f"Data de nascimento: {pessoa.nascimento}"
-              f"CPF: {pessoa.cpf}"
-              f"RG: {pessoa.rg}"
-              f"Sexo: {pessoa.sexo}"
-              f"Estado Civil: {pessoa.estado_civil}"
-              f"Nacionalidade: {pessoa.nacionalidade}"
-              f"Email: {pessoa.email}")
+        print(f"Nome: {pessoa.nome}" 
+              f"\nData de nascimento: {pessoa.nascimento}"
+              f"\nCPF: {pessoa.cpf}"
+              f"\nRG: {pessoa.rg}"
+              f"\nSexo: {pessoa.sexo}"
+              f"\nEstado Civil: {pessoa.est_civil}"
+              f"\nNacionalidade: {pessoa.nacionalidade}"
+              f"\nEmail: {pessoa.email}")
         
 
 # Função para buscar pessoa pelo CPF

@@ -30,10 +30,10 @@ def listar_funcionarios(session):
     
     for funcionario in funcionarios:
         print(50 * "=")
-        print(f"ID Funcionário: {funcionario.id_funcionario}"
-              f"Profissão: {funcionario.profissao}"
-              f"Data Admissão: {funcionario.data_admissao}"
-              f"Salário: {funcionario.salario}")
+        print(f"\nID Funcionário: {funcionario.id_funcionario}"
+              f"\nProfissão: {funcionario.profissao}"
+              f"\nData Admissão: {funcionario.data_admissao}"
+              f"\nSalário: {funcionario.salario}")
         
         # Chamar a função de listar pessoa conforme o id
         listar_pessoa(session, funcionario.id_funcionario)
@@ -100,15 +100,6 @@ def remover_funcionario(session):
                 print(f"Erro ao excluir o funcionário: {e}")
     except Exception as e:
         print(f"Erro ao listar funcionários: {e}")
-
-
-def listar_funcionarios(session):
-    # Consultar todos os funcionários disponíveis
-    dados_funcionarios = session.query(Funcionario, Pessoa).join(Pessoa).all()
-
-    for funcionario, dadosPessoais in dados_funcionarios:
-        print(50 * "-")
-        print(f"ID Cliente: {funcionario.id_funcionario} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nProfissão: {funcionario.profissao} \nSalário: {funcionario.salario} \nAdmitido em: {funcionario.data_admissao}")
 
 
 def editar_funcionario(session):
