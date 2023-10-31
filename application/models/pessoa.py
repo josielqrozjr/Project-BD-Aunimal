@@ -58,33 +58,41 @@ def listar_pessoa(session, id):
 def buscar_pessoa(session):
 
     # Perguntar se possui cadastro
-    verificar_cadastro = input("A pessoa já possui cadastro no sistema? (S/N): ").strip().lower()
+    verificar_cadastro = input("Possui cadastro no sistema? [S | N]: ").strip().lower()
 
     if verificar_cadastro == "s":
-        # Coletar informações já existentes
-        #cpf_pessoa = input("Digite o CPF para consultar: ")
-        #pesq_cadastro = session.query(Pessoa).filter_by(cpf = cpf_pessoa).first()
 
-        cpf_pessoa = input("Digite o CPF para consultar: ")
-    
         # Consultar pessoa por CPF
+        cpf_pessoa = input("Digite o CPF para consultar: ")
         pessoa_query = session.query(Pessoa).filter(Pessoa.cpf == cpf_pessoa).first()
 
         # Verifique se a pessoa foi encontrada
         if pessoa_query:
-            id_pessoa = pessoa_query.id_pessoa
             print(50 * "=")
+            print('PESSOA ENCONTRADA')
+            print(50 * '-')
             print(f"ID Pessoa: {pessoa_query.id_pessoa}")
             print(f"Nome: {pessoa_query.nome}")
-            print(50 * "=")
+            print(f"Nascimento: {pessoa_query.nascimento}")
+            print(f"CPF: {pessoa_query.cpf}")
+            print(f"RG: {pessoa_query.rg}")
+            print(f"Sexo: {pessoa_query.sexo}")
+            print(f"Email: {pessoa_query.email}")
+            print(f"Estado Civil: {pessoa_query.est_civil}")
+            print(f"Nacionalidade: {pessoa_query.nacionalidade}")
+            print(50 * '=')
 
-            return id_pessoa
+            return pessoa_query
     
         else:
             print(50 * '=')
             print("Cadastro não encontrado!")
+            question_cadastro = input("Deseja realizar o cadastro? [S | N]:").strip().lower()
 
-            return cadastrar_pessoa(session)
+            if question_cadastro == "s": return cadastrar_pessoa(session)
+            else: 
+                from models.tabelas import executar
+                executar()
         
     else: return cadastrar_pessoa(session)
     
@@ -137,6 +145,10 @@ def cadastrar_pessoa(session):
         from models.endereco import cadastrar_endereco
         cadastrar_endereco(session, id_gerado)
 
+        # Chamar função para cadastrar contato
+        from models.contato import cadastrar_contato
+        cadastrar_contato(session, id_gerado)
+
         print(50 * "=")
         print(f"Dados cadastrados com sucesso. ID Pessoa: {id_gerado}")
         return id_gerado
@@ -145,3 +157,51 @@ def cadastrar_pessoa(session):
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
         print(f"Erro ao cadastrar os dados pessoais: {e}")
+
+
+def editar_pessoa(session):
+        
+    print(50 * '=')
+    print('ATUALIZAR DADOS PESSOAIS')
+    print(50 * '=')
+
+    #Chamar a função para identificar a pessoa correspondente
+    dados_pessoais = buscar_pessoa(session)
+
+    try:
+
+        # Coletar as novas informações da pessoa
+        print(50 * '=')
+        print('FORMULÁRIO PARA ATUALIZAR DADOS PESSOAIS')
+        print(50 * '=')
+
+        nome = input("Digite o novo nome da pessoa: ")
+        nascimento = input("Digite a nova data de nascimento (AAAA-MM-DD): ")
+        cpf = input("Digite o novo CPF: ")
+        rg = input("Digite o novo RG: ")
+        sexo = input("Digite o novo sexo (M | F | NI): ")
+        email = input("Digite o novo email: ")
+        est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
+        nacionalidade = input("Digite a nova nacionalidade: ")
+
+        # Atualizar as informações da pessoa
+        dados_pessoais.nome = nome
+        dados_pessoais.nascimento = nascimento
+        dados_pessoais.cpf = cpf
+        dados_pessoais.rg = rg
+        dados_pessoais.sexo = sexo
+        dados_pessoais.email = email
+        dados_pessoais.est_civil = est_civil
+        dados_pessoais.nacionalidade = nacionalidade
+
+        session.commit()
+        print(50 * '-')
+        print("Dados pessoais atualizados com sucesso!")
+        print(50 * '-')
+
+        return dados_pessoais
+
+    except Exception as e:
+        # Em caso de erro, faça o rollback e mostre a mensagem de erro
+        session.rollback()
+        print(f"Erro ao atualizar os dados pessoais: {e}")

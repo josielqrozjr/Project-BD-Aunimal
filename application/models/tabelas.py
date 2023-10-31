@@ -10,7 +10,8 @@ def executar():
         print("5. Pet")
         print("6. Raça")
         print("7. Espécie")
-        print("8. Sair")
+        print("8. Endereço")
+        print("9. Sair")
         
         escolha = input("Escolha uma opção: ")
         
@@ -18,32 +19,36 @@ def executar():
             # Importe e execute o módulo correspondente aqui
             from . import servico
             servico.executar()
+
         elif escolha == "2":
-            # Importe e execute o módulo correspondente aqui
             from . import cliente
             cliente.executar()
+
         elif escolha == "3":
-            # Importe e execute o módulo correspondente aqui
             from . import funcionario
             funcionario.executar()
+
         elif escolha == "4":
-            # Importe e execute o módulo correspondente aqui
             from . import profissao
             profissao.executar()
+
         elif escolha == "5":
-            # Importe e execute o módulo correspondente aqui
             from . import pet
             pet.executar()
+
         elif escolha == "6":
-            # Importe e execute o módulo correspondente aqui
             from . import raca
             raca.executar()
+
         elif escolha == "7":
-            # Importe e execute o módulo correspondente aqui
             from . import especie
             especie.executar()
-        
+
         elif escolha == "8":
+            from . import endereco
+            endereco.executar()
+        
+        elif escolha == "9":
             print("Encerrando o programa.")
             break
         else:

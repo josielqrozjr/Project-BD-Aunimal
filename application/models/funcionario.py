@@ -1,11 +1,10 @@
 from models import Base, Pessoa
 from sqlalchemy import DECIMAL, ForeignKey, DATETIME, VARCHAR
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 from services.db import connection
-from models.endereco import cadastrar_endereco
-from models.pessoa import listar_pessoa, buscar_pessoa
+from models.pessoa import listar_pessoa, buscar_pessoa, editar_pessoa
 
 class Funcionario(Base):
     __tablename__ = "funcionario"
@@ -42,7 +41,7 @@ def listar_funcionarios(session):
 
 def adicionar_funcionario(session):
 
-    pessoa_id = buscar_pessoa(session)
+    pessoa = buscar_pessoa(session)
 
     # Coletar informações do funcionário
     print(50 * '=')
@@ -52,7 +51,7 @@ def adicionar_funcionario(session):
     salario = float(input("Digite o salário: "))
 
     # Criar uma nova instância de Funcionario
-    novo_funcionario = Funcionario(id_pessoa = pessoa_id,
+    novo_funcionario = Funcionario(id_pessoa = pessoa.id_pessoa,
                                    data_admissao = datetime.now(),
                                    profissao = profissao, 
                                    salario = salario)
@@ -69,86 +68,42 @@ def adicionar_funcionario(session):
         print(f"Erro ao adicionar o funcionário: {e}")
 
 
-def remover_funcionario(session):
-    try:
-        # Consultar funcionários
-        funcionarios = session.query(Funcionario).all()
-        
-        if not funcionarios:
-            print("Não há funcionários para excluir.")
-            return
-
-        print("Funcionários disponíveis para exclusão:")
-        for funcionario in funcionarios:
-            print(f"ID Funcionário: {funcionario.id_funcionario}, Nome: {funcionario.pessoa.nome}")
-
-        funcionario_id = input("Digite o ID do funcionário que deseja excluir ou '0' para cancelar: ")
-
-        if funcionario_id == '0':
-            print("Operação de exclusão cancelada.")
-        else:
-            try:
-                # Buscar o funcionário pelo ID
-                funcionario = session.query(Funcionario).filter(Funcionario.id_funcionario == funcionario_id).one()
-
-                # Remover o funcionário
-                session.delete(funcionario)
-                session.commit()
-                print("Funcionário excluído com sucesso!")
-            except Exception as e:
-                # Em caso de erro, faça o rollback e mostre a mensagem de erro
-                session.rollback()
-                print(f"Erro ao excluir o funcionário: {e}")
-    except Exception as e:
-        print(f"Erro ao listar funcionários: {e}")
-
-
 def editar_funcionario(session):
-    
-    funcionario_id = input("Digite o ID do funcionário que deseja editar: ")
+
+    #Chamar a função para identificar a pessoa correspondente
+    pessoa = editar_pessoa(session)
 
     try:
         # Buscar o funcionário pelo ID
-        funcionario = session.query(Funcionario).filter(Funcionario.id_funcionario == funcionario_id).one()
+        funcionario = session.query(Funcionario).filter(Funcionario.id_funcionario == pessoa.id_pessoa).one()
 
-        # Exibir as informações atuais da pessoa
-        dadosPessoais = funcionario.pessoa
-        print(f"Informações atuais da pessoa:")
-        print(f"Nome: {dadosPessoais.nome}")
-        print(f"Nascimento: {dadosPessoais.nascimento}")
-        print(f"CPF: {dadosPessoais.cpf}")
-        print(f"RG: {dadosPessoais.rg}")
-        print(f"Sexo: {dadosPessoais.sexo}")
-        print(f"Email: {dadosPessoais.email}")
-        print(f"Estado Civil: {dadosPessoais.est_civil}")
-        print(f"Nacionalidade: {dadosPessoais.nacionalidade}")
+        # Exibir as informações atuais do funcionário
+        print(50 * '=')
+        print('FUNCIONÁRIO ENCONTRADO')
+        print(50 * '-')
+        print(f"ID Funcionário: {funcionario.id_funcionario}")
+        print(f"Profissão: {funcionario.profissao}")
+        print(f"Salário: {funcionario.salario}")
+        print(f"Data Admissão: {funcionario.data_admissao}")
+        
+        # Coletar as novas informações da funcionário
+        print(50 * '=')
+        print('FORMULÁRIO PARA ATUALIZAR FUNCIONÁRIO')
+        print(50 * '=')
+        profissao = input("Digite a profissão: ")
+        salario = float(input("Digite o salário: "))
 
-        # Coletar as novas informações da pessoa
-        nome = input("Digite o novo nome da pessoa: ")
-        nascimento = input("Digite a nova data de nascimento (AAAA-MM-DD): ")
-        cpf = input("Digite o novo CPF: ")
-        rg = input("Digite o novo RG: ")
-        sexo = input("Digite o novo sexo (M/F/NI): ")
-        email = input("Digite o novo email: ")
-        est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
-        nacionalidade = input("Digite a nova nacionalidade: ")
-
-        # Atualizar as informações da pessoa
-        dadosPessoais.nome = nome
-        dadosPessoais.nascimento = nascimento
-        dadosPessoais.cpf = cpf
-        dadosPessoais.rg = rg
-        dadosPessoais.sexo = sexo
-        dadosPessoais.email = email
-        dadosPessoais.est_civil = est_civil
-        dadosPessoais.nacionalidade = nacionalidade
+        # Atualizar as informações próprias do funcionário
+        funcionario.profissao = profissao
+        funcionario.salario = salario
 
         session.commit()
         print("Funcionário atualizado com sucesso!")
+
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
-        print(f"Erro ao editar o funcionário: {e}")
+        print(f"Erro ao atualizar o funcionário: {e}")
         
 
 def executar():

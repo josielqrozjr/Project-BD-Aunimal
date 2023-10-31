@@ -3,6 +3,8 @@ from sqlalchemy import DATETIME, VARCHAR, ForeignKey, CHAR, SMALLINT
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER, SMALLINT
 from datetime import datetime
+from services.db import connection
+
 
 class Endereco(Base):
     __tablename__ = "endereco"
@@ -23,6 +25,7 @@ def cadastrar_endereco(session, pessoa_id):
     print(50 * '=')
     print('FORMULÁRIO PARA CADASTRO DE ENDEREÇO')
     print(50 * '=')
+
     cep = input("Digite o CEP: ")
     logradouro = input("Digite o logradouro: ")
     numero = input("Digite o número: ")
@@ -54,3 +57,94 @@ def cadastrar_endereco(session, pessoa_id):
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
         print(f"Erro ao cadastrar endereço: {e}")
+
+
+def editar_endereco(session):
+
+    print(50 * '=')
+    print('ATUALIZAR ENDEREÇO')
+    print(50 * '=')
+
+    #Chamar a função para identificar a pessoa correspondente
+    from models.pessoa import buscar_pessoa
+    pessoa = buscar_pessoa(session)
+    
+    try:
+        # Buscar pelo ID
+        endereco_pessoa = session.query(Endereco).filter(Endereco.id_pessoa == pessoa.id_pessoa).one()
+
+        # Exibir o endereço atual da pessoa
+        print(50 * '=')
+        print('ENDEREÇO ENCONTRADO')
+        print(50 * '-')
+        print(f"ID Pessoa: {endereco_pessoa.id_pessoa}")
+        print(f"CEP: {endereco_pessoa.cep}")
+        print(f"Logradouro: {endereco_pessoa.logradouro}")
+        print(f"Número: {endereco_pessoa.numero}")
+        print(f"Bairro: {endereco_pessoa.bairro}")
+        print(f"Cidade: {endereco_pessoa.cidade}")
+        print(f"Estado: {endereco_pessoa.estado}")
+        print(50 * '=')
+
+        # Coletar as novas informações de endereço
+        print(50 * '=')
+        print('FORMULÁRIO PARA ATUALIZAR O ENDEREÇO')
+        print(50 * '=')
+
+        cep = input("Digite o CEP: ")
+        logradouro = input("Digite o logradouro: ")
+        numero = input("Digite o número: ")
+        bairro = input("Digite o bairro: ")
+        cidade = input("Digite a cidade: ")
+        estado = input("Digite o estado: ")
+
+        # Atualizar as informações da pessoa
+        endereco_pessoa.cep = cep
+        endereco_pessoa.logradouro = logradouro
+        endereco_pessoa.numero = numero
+        endereco_pessoa.bairro = bairro
+        endereco_pessoa.cidade = cidade
+        endereco_pessoa.estado = estado
+
+        session.commit()
+        print("Endereço atualizado com sucesso!")
+
+    except Exception as e:
+        # Em caso de erro, faça o rollback e mostre a mensagem de erro
+        session.rollback()
+        print(f"Erro ao editar o endereço: {e}")
+
+
+def executar():
+    # Iniciar uma sessão
+    session = connection
+
+    while True:
+        print()
+        print(50 * "=")
+        print()
+        print("\nOpções:")
+        print("1. Editar endereço")
+        print("2. Sair")
+
+        escolha = input("Escolha uma opção: ")
+
+        if escolha == "1":
+            print()
+            print(50 * "=")
+            print()
+            editar_endereco(session)
+        elif escolha == "2":
+            print()
+            print(50 * "=")
+            print()
+            print("Encerrando o programa.")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
+    # Fechar a sessão quando terminar
+    session.close()
+
+if __name__ == "__main__":
+    executar()  
