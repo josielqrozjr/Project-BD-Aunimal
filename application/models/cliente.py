@@ -1,9 +1,10 @@
 from models import Base, Pessoa 
 from sqlalchemy import ForeignKey, DATETIME
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
 from services.db import connection
+from models.pessoa import listar_pessoa, buscar_pessoa, editar_pessoa
 
 
 class Cliente(Base):
@@ -29,19 +30,20 @@ def tempo_cliente(data_criacao):
 
     return dias, meses, anos
 
- 
-def listar_clientes(session):  
-    # Consultar clientes e seus dados da tabela pessoas com informações combinadas
-    dados_clientes = session.query(Cliente, Pessoa).join(Pessoa).all()
-    
-    for cliente, dadosPessoais in dados_clientes:
-        print(50 * "-")
-        print(f"ID Cliente: {cliente.id_cliente} \nNome: {dadosPessoais.nome} \nCPF: {dadosPessoais.cpf} \nRG: {dadosPessoais.rg} \nNascimento: {dadosPessoais.nascimento} \nSexo: {dadosPessoais.sexo} \nEmail: {dadosPessoais.email} \nEstado Civil: {dadosPessoais.est_civil} \nNacionalidade: {dadosPessoais.nacionalidade} \nCadastrado em: {cliente.data_criacao}")
-        
-        dias, meses, anos = tempo_cliente(cliente.data_criacao)
-        print(f"Cliente há {dias} dias, {meses} meses e {anos} anos.")
 
-        
+def listar_clientes(session):
+    # Consultar clientes com suas informações pessoais
+    clientes = session.query(Cliente).all()
+    
+    for cliente in clientes:
+
+        # Chamar a função de listar pessoa conforme o id
+        listar_pessoa(session, cliente.id_cliente)
+
+        dias, meses, anos = tempo_cliente(cliente.data_criacao)
+        print(f"Cliente há {dias} dias, {meses} meses e {anos} anos.\n")
+        print(50 * "=")
+     
 
 def adicionar_cliente(session):
     # Coletar informações da pessoa

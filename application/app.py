@@ -27,7 +27,7 @@ def main():
         escolha = input("\nEscolha uma opção: ")
         
         if escolha == "2":
-            print("Encerrando o programa.")
+            print("Encerrando o programa.\n")
             break
         else:
             redirecionar_opcao(escolha)

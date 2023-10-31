@@ -118,8 +118,7 @@ def executar():
         print("1. Listar funcionários")
         print("2. Adicionar funcionário")
         print("3. Editar funcionário")
-        print("4. Remover funcionário")
-        print("5. Sair")
+        print("4. Sair")
 
         escolha = input("Escolha uma opção: ")
 
@@ -139,11 +138,6 @@ def executar():
             print()
             editar_funcionario(session)
         elif escolha == "4":
-            print()
-            print(50 * "=")
-            print()
-            remover_funcionario(session)
-        elif escolha == "5":
             print()
             print(50 * "=")
             print()
