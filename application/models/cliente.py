@@ -99,6 +99,42 @@ def editar_cliente(session):
         print(50 * "-")
 
 
+# Função para buscar pessoa associada a tabela cliente
+def buscar_cliente(session):
+
+    # Perguntar se possui cadastro
+    verificar_cadastro = input("Possui cadastro como cliente no sistema? [S | N]: ").strip().lower()
+
+    if verificar_cadastro == "s":
+
+        # Consultar cliente por CPF
+        cpf_pessoa = input("Digite o CPF para consultar: ")
+        cliente_query = session.query(Pessoa, Cliente).join(Cliente, Pessoa.id_pessoa == Cliente.id_pessoa).filter(Pessoa.cpf == cpf_pessoa).first()
+
+        # Verifique se a pessoa foi encontrada
+        if cliente_query:
+                print(50 * "=")
+                print('CLIENTE ENCONTRADO')
+                print(50 * '-')
+                print(f"ID Cliente: {cliente_query.id_cliente}")
+                print(f"Nome: {cliente_query.nome}")
+                print(50 * '=')
+
+                return cliente_query
+        
+        else:
+            print(50 * '-')
+            print("Cadastro de cliente não encontrado!")
+            question_cadastro = input("Deseja realizar o cadastro? [S | N]:").strip().lower()
+
+            if question_cadastro == "s": return adicionar_cliente(session)
+            else: 
+                from models.tabelas import executar
+                executar()
+        
+    else: return adicionar_cliente(session)
+
+
 def executar():
     # Iniciar uma sessão
     session = connection

@@ -58,7 +58,7 @@ def listar_pessoa(session, id):
 def buscar_pessoa(session):
 
     # Perguntar se possui cadastro
-    verificar_cadastro = input("Possui cadastro no sistema? [S | N]: ").strip().lower()
+    verificar_cadastro = input("Possui dados pessoais cadastrados no sistema? [S | N]: ").strip().lower()
 
     if verificar_cadastro == "s":
 
