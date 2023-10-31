@@ -71,50 +71,32 @@ def adicionar_cliente(session):
 
 
 def editar_cliente(session):
-    cliente_id = input("Digite o ID do cliente que deseja editar: ")
+
+    #Chamar a função para identificar a pessoa correspondente
+    pessoa = editar_pessoa(session)
 
     try:
-        # Buscar o cliente pelo ID
-        cliente = session.query(Cliente).filter(Cliente.id_cliente == cliente_id).one()
+        # Buscar o funcionário pelo ID
+        cliente = session.query(Cliente).filter(Cliente.id_cliente == pessoa.id_pessoa).one()
 
-        # Exibir as informações atuais da pessoa
-        dadosPessoais = cliente.pessoa
-        print(f"Informações atuais da pessoa:")
-        print(f"Nome: {dadosPessoais.nome}")
-        print(f"Nascimento: {dadosPessoais.nascimento}")
-        print(f"CPF: {dadosPessoais.cpf}")
-        print(f"RG: {dadosPessoais.rg}")
-        print(f"Sexo: {dadosPessoais.sexo}")
-        print(f"Email: {dadosPessoais.email}")
-        print(f"Estado Civil: {dadosPessoais.est_civil}")
-        print(f"Nacionalidade: {dadosPessoais.nacionalidade}")
-
-        # Coletar as novas informações da pessoa
-        nome = input("Digite o novo nome da pessoa: ")
-        nascimento = input("Digite a nova data de nascimento (AAAA-MM-DD): ")
-        cpf = input("Digite o novo CPF: ")
-        rg = input("Digite o novo RG: ")
-        sexo = input("Digite o novo sexo (M/F/NI): ")
-        email = input("Digite o novo email: ")
-        est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
-        nacionalidade = input("Digite a nova nacionalidade: ")
-
-        # Atualizar as informações da pessoa
-        dadosPessoais.nome = nome
-        dadosPessoais.nascimento = nascimento
-        dadosPessoais.cpf = cpf
-        dadosPessoais.rg = rg
-        dadosPessoais.sexo = sexo
-        dadosPessoais.email = email
-        dadosPessoais.est_civil = est_civil
-        dadosPessoais.nacionalidade = nacionalidade
+        # Exibir as informações atuais do funcionário
+        print(50 * '=')
+        print('CLIENTE ENCONTRADO')
+        print(50 * '-')
+        print(f"ID Cliente: {cliente.id_cliente}")
+        print(f"Cadastrado em: {cliente.data_criacao}")
 
         session.commit()
+        print(50 * "-")
         print("Cliente atualizado com sucesso!")
+        print(50 * "-")
+
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
-        print(f"Erro ao editar o cliente: {e}")
+        print(50 * "-")
+        print(f"Erro ao atualizar o cliente: {e}")
+        print(50 * "-")
 
 
 def executar():

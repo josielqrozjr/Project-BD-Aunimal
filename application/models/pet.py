@@ -21,5 +21,5 @@ class Pet(Base):
     porte: Mapped[Porte] = mapped_column(sqlalchemy.Enum('PP', 'P', 'M', 'G', 'GG', name = "porte_enum"), nullable=False)
     nascimento: Mapped[date] = mapped_column(DATE, nullable=True)
     descricao: Mapped[str] = mapped_column(VARCHAR(200), nullable=True)
-    id_especie: Mapped[int] = mapped_column("id_especie", INTEGER, ForeignKey(Especie.id_especie), primary_key=True, nullable=False) # chave PK Fk coloca junto?
+    id_especie: Mapped[int] = mapped_column("id_especie", INTEGER, ForeignKey(Especie.id_especie), primary_key=True, nullable=False)
     id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Cliente.id_cliente), nullable=False)
