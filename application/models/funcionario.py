@@ -9,15 +9,14 @@ from models.pessoa import listar_pessoa, buscar_pessoa, editar_pessoa
 class Funcionario(Base):
     __tablename__ = "funcionario"
 
-    id_funcionario: Mapped[int] = mapped_column("id_funcionario", INTEGER, primary_key=True, nullable=False, autoincrement=True)
-    id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, ForeignKey(Pessoa.id_pessoa), nullable=False)
+    id_funcionario: Mapped[int] = mapped_column("id_funcionario", INTEGER, ForeignKey(Pessoa.id_pessoa), primary_key=True, nullable=False)
     data_admissao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
     profissao: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     salario: Mapped[float] = mapped_column(DECIMAL(10,2), nullable=False)
 
 
-    def __init__(self, id_pessoa, data_admissao, profissao, salario):
-       self.id_pessoa = id_pessoa
+    def __init__(self, id_funcionario, data_admissao, profissao, salario):
+       self.id_funcionario = id_funcionario
        self.data_admissao = data_admissao
        self.profissao = profissao
        self.salario = salario
@@ -51,7 +50,7 @@ def adicionar_funcionario(session):
     salario = float(input("Digite o salário: "))
 
     # Criar uma nova instância de Funcionario
-    novo_funcionario = Funcionario(id_pessoa = pessoa.id_pessoa,
+    novo_funcionario = Funcionario(id_funcionario = pessoa.id_pessoa,
                                    data_admissao = datetime.now(),
                                    profissao = profissao, 
                                    salario = salario)
@@ -60,12 +59,16 @@ def adicionar_funcionario(session):
         # Adicionar o funcionário à sessão e fazer o commit
         session.add(novo_funcionario)
         session.commit()
-        print("Funcionário adicionado com sucesso!")
+        print(50 * "-")
+        print(f"Funcionário cadastrado com sucesso! ID Funcionário: {novo_funcionario.id_funcionario}")
+        print(50 * "-")
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
-        print(f"Erro ao adicionar o funcionário: {e}")
+        print(50 * "-")
+        print(f"Erro ao cadastrar o funcionário: {e}")
+        print(50 * "-")
 
 
 def editar_funcionario(session):
@@ -98,12 +101,16 @@ def editar_funcionario(session):
         funcionario.salario = salario
 
         session.commit()
+        print(50 * "-")
         print("Funcionário atualizado com sucesso!")
+        print(50 * "-")
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+        print(50 * "-")
         print(f"Erro ao atualizar o funcionário: {e}")
+        print(50 * "-")
         
 
 def executar():

@@ -1,5 +1,5 @@
 from models import Base
-from sqlalchemy import DATETIME, DATE, VARCHAR, CHAR, Enum
+from sqlalchemy import DATETIME, DATE, VARCHAR, CHAR
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime, date
@@ -141,6 +141,10 @@ def cadastrar_pessoa(session):
         # Obter o ID_pessoa recém-gerado
         id_gerado = nova_pessoa.id_pessoa
 
+        print(50 * "-")
+        print(f"Dados cadastrados com sucesso. ID Pessoa: {id_gerado}")
+        print(50 * "-")
+
         # Chamar função para cadastrar endereço
         from models.endereco import cadastrar_endereco
         cadastrar_endereco(session, id_gerado)
@@ -149,14 +153,14 @@ def cadastrar_pessoa(session):
         from models.contato import cadastrar_contato
         cadastrar_contato(session, id_gerado)
 
-        print(50 * "=")
-        print(f"Dados cadastrados com sucesso. ID Pessoa: {id_gerado}")
-        return id_gerado
+        return nova_pessoa
         
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+        print(50 * "-")
         print(f"Erro ao cadastrar os dados pessoais: {e}")
+        print(50 * "-")
 
 
 def editar_pessoa(session):
@@ -204,4 +208,6 @@ def editar_pessoa(session):
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+        print(50 * "-")
         print(f"Erro ao atualizar os dados pessoais: {e}")
+        print(50 * "-")

@@ -5,7 +5,7 @@ def executar():
         print("\nOpções:")
         print("1. Serviços")
         print("2. Clientes")
-        print("3. Funcionário")
+        print("3. Funcionários")
         print("4. Profissão")
         print("5. Pet")
         print("6. Raça")

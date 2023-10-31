@@ -1,4 +1,3 @@
-from typing import Any
 from models import Base, Pessoa
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
@@ -45,10 +44,13 @@ def cadastrar_contato(session, pessoa_id):
         # Obter o ID_endereco recém-gerado
         id_contato_pessoa = novo_contato.id_pessoa
 
-        print(50 * "=")
+        print(50 * "-")
         print(f"Dados cadastrados com sucesso. ID Pessoa-Contato: {id_contato_pessoa}")
+        print(50 * "-")
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+        print(50 * "-")
         print(f"Erro ao cadastrar contato: {e}")
+        print(50 * "-")

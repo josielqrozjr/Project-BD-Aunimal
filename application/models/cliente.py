@@ -10,13 +10,12 @@ from models.pessoa import listar_pessoa, buscar_pessoa, editar_pessoa
 class Cliente(Base):
     __tablename__ = "cliente"
     
-    id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, nullable=False, autoincrement=True, primary_key=True)
-    id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, ForeignKey(Pessoa.id_pessoa), nullable=False)
+    id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Pessoa.id_pessoa), primary_key=True, nullable=False)
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
 
 
-    def __init__(self, id_pessoa, data_criacao):
-        self.id_pessoa = id_pessoa
+    def __init__(self, id_cliente, data_criacao):
+        self.id_cliente = id_cliente
         self.data_criacao = data_criacao
 
 
@@ -41,68 +40,34 @@ def listar_clientes(session):
         listar_pessoa(session, cliente.id_cliente)
 
         dias, meses, anos = tempo_cliente(cliente.data_criacao)
-        print(f"Cliente há {dias} dias, {meses} meses e {anos} anos.\n")
+        print(f"Cadastrado em: {cliente.data_criacao}")
+        print(f"Cliente há {dias} dias, {meses} meses e {anos} anos.")
+        print(f"ID Cliente: {cliente.id_cliente}\n")
         print(50 * "=")
      
 
 def adicionar_cliente(session):
-    # Coletar informações da pessoa
-    nome = input("Digite o nome do cliente: ")
-    nascimento = input("Digite a data de nascimento (AAAA-MM-DD): ")
-    cpf = input("Digite o CPF: ")
-    rg = input("Digite o RG: ")
-    sexo = input("Digite o sexo (M/F/NI): ")
-    email = input("Digite o email: ")
-    est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
-    nacionalidade = input("Digite o país de origem: ")
-    data_criacao = datetime.now()
+
+    pessoa = buscar_pessoa(session)
     
-    # Criar uma nova instância de Pessoa
-    nova_pessoa = Pessoa(nome = nome, 
-                         nascimento = nascimento, 
-                         cpf = cpf, 
-                         rg = rg, 
-                         sexo = sexo, 
-                         email = email, 
-                         est_civil = est_civil, 
-                         nacionalidade = nacionalidade, 
-                         data_criacao = data_criacao)
-    
+    # Criar uma nova instância de Cliente
+    novo_cliente = Cliente(id_cliente = pessoa.id_pessoa,
+                                   data_criacao = datetime.now())
+
     try:
-        # Adicionar os dados de pessoa a sessão e fazer o commit para obter o ID gerado
-        session.add(nova_pessoa)
-        session.commit()
-
-        # Obter o ID_pessoa recém-gerado
-        id_pessoa = nova_pessoa.id_pessoa
-
-        # Criar uma nova instância de Cliente associando a nova pessoa
-        novo_cliente = Cliente(id_pessoa=id_pessoa)
+        # Adicionar o cliente à sessão e fazer o commit
         session.add(novo_cliente)
         session.commit()
-        print("Cliente adicionado com sucesso!")
+        print(50 * "-")
+        print(f"Cliente cadastrado com sucesso! ID Cliente: {novo_cliente.id_cliente}")
+        print(50 * "-")
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
-        print(f"Erro ao adicionar o cliente: {e}")
-
-
-def deletar_cliente(session):
-    cliente_id = input("Digite o ID do cliente que deseja excluir: ")
-
-    try:
-        # Buscar o cliente pelo ID
-        cliente = session.query(Cliente).filter(Cliente.id_cliente == cliente_id).one()
-
-        # Remover o cliente
-        session.delete(cliente)
-        session.commit()
-        print("Cliente excluído com sucesso!")
-    except Exception as e:
-        # Em caso de erro, faça o rollback e mostre a mensagem de erro
-        session.rollback()
-        print(f"Erro ao excluir o cliente: {e}")
+        print(50 * "-")
+        print(f"Erro ao cadastrar o cliente: {e}")
+        print(50 * "-")
 
 
 def editar_cliente(session):
@@ -164,8 +129,7 @@ def executar():
         print("1. Listar clientes")
         print("2. Adicionar cliente")
         print("3. Editar cliente")
-        print("4. Deletar cliente")
-        print("5. Sair")
+        print("4. Sair")
 
         escolha = input("Escolha uma opção: ")
 
@@ -185,11 +149,6 @@ def executar():
             print()
             editar_cliente(session)
         elif escolha == "4":
-            print()
-            print(50 * "=")
-            print()
-            deletar_cliente(session)
-        elif escolha == "5":
             print()
             print(50 * "=")
             print()

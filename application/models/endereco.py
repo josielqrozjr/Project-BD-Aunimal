@@ -46,17 +46,17 @@ def cadastrar_endereco(session, pessoa_id):
         # Adicionar o novo endereco à sessão e fazer o commit para obter o ID gerado
         session.add(novo_endereco)
         session.commit()
-            
-        # Obter o ID_endereco recém-gerado
-        id_endereco = novo_endereco.id_endereco
 
-        print(50 * "=")
-        print(f"Dados cadastrados com sucesso. ID Endereço: {id_endereco}")
+        print(50 * "-")
+        print(f"Dados cadastrados com sucesso. ID Endereço: {novo_endereco.id_endereco}")
+        print(50 * "-")
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+        print(50 * "-")
         print(f"Erro ao cadastrar endereço: {e}")
+        print(50 * "-")
 
 
 def editar_endereco(session):
@@ -107,12 +107,16 @@ def editar_endereco(session):
         endereco_pessoa.estado = estado
 
         session.commit()
+        print(50 * "-")
         print("Endereço atualizado com sucesso!")
+        print(50 * "-")
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+        print(50 * "-")
         print(f"Erro ao editar o endereço: {e}")
+        print(50 * "-")
 
 
 def executar():
