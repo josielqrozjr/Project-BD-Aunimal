@@ -4,7 +4,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime, date
 from services.db import connection
-from typing import Literal
+from typing import Any, Literal
 import sqlalchemy
 from models.cliente import buscar_cliente
 
@@ -26,6 +26,19 @@ class Pet(Base):
     descricao: Mapped[str] = mapped_column(VARCHAR(200), nullable=True)
     id_especie: Mapped[int] = mapped_column("id_especie", INTEGER, ForeignKey(Especie.id), primary_key=True, nullable=False)
     id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Cliente.id), nullable=False)
+
+
+    def __init__(self, data_criacao, nome, peso, sexo, pelagem, porte, nascimento, descricao, id_especie, id_cliente):
+        self.data_criacao = data_criacao
+        self.nome = nome
+        self.peso = peso
+        self.sexo = sexo
+        self.pelagem = pelagem
+        self.porte = porte
+        self.nascimento = nascimento
+        self.descricao = descricao
+        self.id_especie = id_especie
+        self.id_cliente = id_cliente
 
 
 def adicionar_pet(session):

@@ -2,9 +2,8 @@ from models import Base, Raca
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
-from typing import Any, Literal
+from typing import Literal
 import sqlalchemy
-from models.raca import listar_racas
 
 Tipo = Literal['GATO','CACHORRO']
 
@@ -52,20 +51,20 @@ def adicionar_especie(session):
 
     listar_especies(session)
     
-    especie_pet = input("A espécie do seu pet encontra-se na lista acima? (S | N): ").strip().upper()
+    especie_pet = input("\nA espécie do seu pet encontra-se na lista acima? (S | N): ").strip().upper()
 
     while especie_pet != 'S' and especie_pet != 'N':
-        print("Comando inválido! Digite novamente.")
+        print("\nComando inválido! Digite novamente.")
         especie_pet = input("A espécie do seu pet encontra-se na lista acima? (S | N): ").strip().upper()
     
     if especie_pet == 'S':
-        especie_id = int(input("Digite o ID da espécie: "))
+        especie_id = int(input("\nDigite o ID da espécie: "))
         especie = session.query(Especie).filter(Especie.id == especie_id).first()
         return especie
     
     else:
         # Coletar dados do novo cadastro em espécie
-        tipo = input("Digite a espécie (GATO | CACHORRO): ")
+        tipo = input("\nDigite a espécie (GATO | CACHORRO): ")
 
         nova_especie = Especie(tipo = tipo, id_raca = raca_pet.id)
 

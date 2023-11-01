@@ -90,7 +90,7 @@ def editar_cliente(session):
 def buscar_cliente(session):
 
     # Perguntar se possui cadastro
-    verificar_cadastro = input("Possui cadastro como cliente no sistema? [S | N]: ").strip().lower()
+    verificar_cadastro = input("\nPossui cadastro como cliente no sistema? [S | N]: ").strip().lower()
 
     if verificar_cadastro == "s":
 
