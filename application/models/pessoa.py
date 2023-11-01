@@ -13,7 +13,7 @@ Est_civil = Literal['SOLTEIRO','CASADO','DIVORCIADO','SEPARADO','VIUVO']
 class Pessoa(Base):
     __tablename__ = "pessoa"
     
-    id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, nullable=False, autoincrement=True, primary_key=True)
+    id: Mapped[int] = mapped_column("id", INTEGER, nullable=False, autoincrement=True, primary_key=True)
     nome: Mapped[str] =  mapped_column(VARCHAR(100), nullable=False)
     nascimento: Mapped[date] = mapped_column(DATE, nullable=False)
     cpf: Mapped[str] = mapped_column(CHAR(11), nullable=False, unique=True)
@@ -37,10 +37,10 @@ class Pessoa(Base):
 
 
 # Listar as pessoas que estão associadas a tabela passada no parâmetro
-def listar_pessoa(session, id):
+def listar_pessoa(session, pessoa_id):
     
     # Consultar pessoas e atribuir os resultados na variável
-    dados_pessoa = session.query(Pessoa).filter(Pessoa.id_pessoa == id)
+    dados_pessoa = session.query(Pessoa).filter(Pessoa.id == pessoa_id)
     
     for pessoa in dados_pessoa:
         print(50 * "=")
@@ -71,7 +71,7 @@ def buscar_pessoa(session):
             print(50 * "=")
             print('PESSOA ENCONTRADA')
             print(50 * '-')
-            print(f"ID Pessoa: {pessoa_query.id_pessoa}")
+            print(f"ID Pessoa: {pessoa_query.id}")
             print(f"Nome: {pessoa_query.nome}")
             print(f"Nascimento: {pessoa_query.nascimento}")
             print(f"CPF: {pessoa_query.cpf}")
@@ -97,7 +97,7 @@ def buscar_pessoa(session):
     else: return cadastrar_pessoa(session)
     
 
-# Função para cadastrar pessoa
+# Função para cadastrar dados da pessoa
 def cadastrar_pessoa(session):
     
     print(50 * '=')
@@ -133,37 +133,22 @@ def cadastrar_pessoa(session):
                         nacionalidade = nacionalidade, 
                         data_criacao = datetime.now())
         
-    try:
-        # Adicionar o novo cadastro à sessão e fazer o commit para obter o ID gerado
-        session.add(nova_pessoa)
-        session.commit()
+    # Chamar função para inserir cadastro na tabela
+    from models.tabelas import inserir_cadastro
+    cadastrar = inserir_cadastro(session, 'pessoa', nova_pessoa)
 
-        # Obter o ID_pessoa recém-gerado
-        id_gerado = nova_pessoa.id_pessoa
+    # Chamar função para cadastrar endereço
+    from models.endereco import cadastrar_endereco
+    cadastrar_endereco(session, cadastrar.id)
 
-        print(50 * "-")
-        print(f"Dados cadastrados com sucesso. ID Pessoa: {id_gerado}")
-        print(50 * "-")
+    # Chamar função para cadastrar contato
+    from models.contato import cadastrar_contato
+    cadastrar_contato(session, cadastrar.id)
 
-        # Chamar função para cadastrar endereço
-        from models.endereco import cadastrar_endereco
-        cadastrar_endereco(session, id_gerado)
-
-        # Chamar função para cadastrar contato
-        from models.contato import cadastrar_contato
-        cadastrar_contato(session, id_gerado)
-
-        return nova_pessoa
-        
-    except Exception as e:
-        # Em caso de erro, faça o rollback e mostre a mensagem de erro
-        session.rollback()
-        
-        print(50 * "-")
-        print(f"Erro ao cadastrar os dados pessoais: {e}")
-        print(50 * "-")
+    return cadastrar
 
 
+# Função para editar dados da pessoa
 def editar_pessoa(session):
         
     print(50 * '=')

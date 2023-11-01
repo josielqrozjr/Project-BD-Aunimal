@@ -9,7 +9,7 @@ from services.db import connection
 class Endereco(Base):
     __tablename__ = "endereco"
 
-    id_endereco: Mapped[int] = mapped_column("id_endereco", INTEGER,nullable=False, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column("id", INTEGER,nullable=False, primary_key=True, autoincrement=True)
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
     cep: Mapped[str] = mapped_column(CHAR(8), nullable=False)
     logradouro: Mapped[str] = mapped_column(VARCHAR(50))
@@ -17,7 +17,7 @@ class Endereco(Base):
     bairro: Mapped[str] = mapped_column(VARCHAR(50), nullable=False)
     cidade: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     estado: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
-    id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, ForeignKey(Pessoa.id_pessoa), primary_key=True, nullable=False)
+    id_pessoa: Mapped[int] = mapped_column("id_pessoa", INTEGER, ForeignKey(Pessoa.id), primary_key=True, nullable=False)
 
 
 def cadastrar_endereco(session, pessoa_id):
@@ -42,21 +42,9 @@ def cadastrar_endereco(session, pessoa_id):
                              estado = estado,
                              id_pessoa = pessoa_id)
     
-    try:
-        # Adicionar o novo endereco à sessão e fazer o commit para obter o ID gerado
-        session.add(novo_endereco)
-        session.commit()
-
-        print(50 * "-")
-        print(f"Dados cadastrados com sucesso. ID Endereço: {novo_endereco.id_endereco}")
-        print(50 * "-")
-
-    except Exception as e:
-        # Em caso de erro, faça o rollback e mostre a mensagem de erro
-        session.rollback()
-        print(50 * "-")
-        print(f"Erro ao cadastrar endereço: {e}")
-        print(50 * "-")
+    # Chamar função para inserir cadastro na tabela
+    from models.tabelas import inserir_cadastro
+    return inserir_cadastro(session, 'endereço', novo_endereco)
 
 
 def editar_endereco(session):
@@ -71,7 +59,7 @@ def editar_endereco(session):
     
     try:
         # Buscar pelo ID
-        endereco_pessoa = session.query(Endereco).filter(Endereco.id_pessoa == pessoa.id_pessoa).one()
+        endereco_pessoa = session.query(Endereco).filter(Endereco.id_pessoa == pessoa.id).one()
 
         # Exibir o endereço atual da pessoa
         print(50 * '=')

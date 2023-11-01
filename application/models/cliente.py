@@ -10,7 +10,7 @@ from models.pessoa import listar_pessoa, buscar_pessoa, editar_pessoa
 class Cliente(Base):
     __tablename__ = "cliente"
     
-    id: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Pessoa.id), primary_key=True, nullable=False)
+    id: Mapped[int] = mapped_column("id", INTEGER, ForeignKey(Pessoa.id), primary_key=True, nullable=False)
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
 
     def __init__(self, data_criacao):
@@ -52,24 +52,9 @@ def adicionar_cliente(session):
     novo_cliente = Cliente(id = pessoa.id,
                                    data_criacao = datetime.now())
 
-    try:
-        # Adicionar o cliente à sessão e fazer o commit
-        session.add(novo_cliente)
-        session.commit()
-
-        print(50 * "-")
-        print(f"Cliente cadastrado com sucesso! ID Cliente: {novo_cliente.id}")
-        print(50 * "-")
-
-        return novo_cliente
-
-    except Exception as e:
-        # Em caso de erro, faça o rollback e mostre a mensagem de erro
-        session.rollback()
-
-        print(50 * "-")
-        print(f"Erro ao cadastrar o cliente: {e}")
-        print(50 * "-")
+    # Chamar função para inserir cadastro na tabela
+    from models.tabelas import inserir_cadastro
+    return inserir_cadastro(session, 'cliente', novo_cliente)    
 
 
 def editar_cliente(session):
@@ -79,13 +64,13 @@ def editar_cliente(session):
 
     try:
         # Buscar o funcionário pelo ID
-        cliente = session.query(Cliente).filter(Cliente.id_cliente == pessoa.id_pessoa).one()
+        cliente = session.query(Cliente).filter(Cliente.id == pessoa.id).one()
 
         # Exibir as informações atuais do funcionário
         print(50 * '=')
         print('CLIENTE ENCONTRADO')
         print(50 * '-')
-        print(f"ID Cliente: {cliente.id_cliente}")
+        print(f"ID Cliente: {cliente.id}")
         print(f"Cadastrado em: {cliente.data_criacao}")
 
         session.commit()
@@ -111,14 +96,14 @@ def buscar_cliente(session):
 
         # Consultar cliente por CPF
         cpf_pessoa = input("Digite o CPF para consultar: ")
-        cliente_query = session.query(Pessoa, Cliente).join(Cliente, Pessoa.id_pessoa == Cliente.id_pessoa).filter(Pessoa.cpf == cpf_pessoa).first()
+        cliente_query = session.query(Pessoa).join(Cliente, Pessoa.id == Cliente.id).filter(Pessoa.cpf == cpf_pessoa).first()
 
         # Verifique se a pessoa foi encontrada
         if cliente_query:
                 print(50 * "=")
                 print('CLIENTE ENCONTRADO')
                 print(50 * '-')
-                print(f"ID Cliente: {cliente_query.id_cliente}")
+                print(f"ID Cliente: {cliente_query.id}")
                 print(f"Nome: {cliente_query.nome}")
                 print(50 * '-')
 

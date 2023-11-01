@@ -7,7 +7,7 @@ from services.db import connection
 from typing import Literal
 import sqlalchemy
 from models.cliente import buscar_cliente
-from models.tabelas import inserir_cadastro
+
 
 Sexo = Literal['M','F']
 Porte = Literal['PP', 'P', 'M', 'G', 'GG']
@@ -15,7 +15,7 @@ Porte = Literal['PP', 'P', 'M', 'G', 'GG']
 class Pet(Base):
     __tablename__ = "pet"
 
-    id_pet: Mapped[int] = mapped_column("id_pet", INTEGER,nullable=False, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column("id", INTEGER,nullable=False, primary_key=True, autoincrement=True)
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
     nome: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     peso: Mapped[float] = mapped_column(DECIMAL(5,2), nullable=True)
@@ -24,8 +24,8 @@ class Pet(Base):
     porte: Mapped[Porte] = mapped_column(sqlalchemy.Enum('PP', 'P', 'M', 'G', 'GG', name = "porte_enum"), nullable=False)
     nascimento: Mapped[date] = mapped_column(DATE, nullable=True)
     descricao: Mapped[str] = mapped_column(VARCHAR(200), nullable=True)
-    id_especie: Mapped[int] = mapped_column("id_especie", INTEGER, ForeignKey(Especie.id_especie), primary_key=True, nullable=False)
-    id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Cliente.id_cliente), nullable=False)
+    id_especie: Mapped[int] = mapped_column("id_especie", INTEGER, ForeignKey(Especie.id), primary_key=True, nullable=False)
+    id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Cliente.id), nullable=False)
 
 
 def adicionar_pet(session):
@@ -36,6 +36,11 @@ def adicionar_pet(session):
     print(50 * '=')
     print('FORMULÁRIO PARA CADASTRO DE PET')
     print(50 * '=')
+
+    # Chamar a função para cadastrar/escolher espécie
+
+
+    # Coletar dados do pet
     nome = input("Digite a nome: ")
     peso = float(input("Digite o peso: "))
     sexo = input("Digite o sexo (M | F): ")
@@ -44,12 +49,15 @@ def adicionar_pet(session):
     nascimento = input("Digite a data de nascimento (AAAA-MM-DD): ")
     descricao = input("Digite a descrição: ")
 
-    # Chamar a função para cadastrar/escolher espécie
 
 
     # Criar uma nova instância de Pet
     novo_pet = Cliente(id_cliente = cliente.id_cliente,
                                    data_criacao = datetime.now())
+    
+    # Chamar função para inserir cadastro na tabela
+    from models.tabelas import inserir_cadastro
+    return inserir_cadastro(session, 'pet', novo_pet)
 
     
     
@@ -57,6 +65,7 @@ def adicionar_pet(session):
 
 def executar():
     # Iniciar uma sessão
+    from services.db import connection
     session = connection
 
     while True:

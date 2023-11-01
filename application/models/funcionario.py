@@ -9,18 +9,17 @@ from models.pessoa import listar_pessoa, buscar_pessoa, editar_pessoa
 class Funcionario(Base):
     __tablename__ = "funcionario"
 
-    id_funcionario: Mapped[int] = mapped_column("id_funcionario", INTEGER, ForeignKey(Pessoa.id_pessoa), primary_key=True, nullable=False)
+    id: Mapped[int] = mapped_column("id_funcionario", INTEGER, ForeignKey(Pessoa.id), primary_key=True, nullable=False)
     data_admissao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
     profissao: Mapped[str] = mapped_column(VARCHAR(100), nullable=False)
     salario: Mapped[float] = mapped_column(DECIMAL(10,2), nullable=False)
 
 
-    def __init__(self, id_funcionario, data_admissao, profissao, salario):
-       self.id_funcionario = id_funcionario
+    def __init__(self, data_admissao, profissao, salario):
        self.data_admissao = data_admissao
        self.profissao = profissao
        self.salario = salario
- 
+
 
 def listar_funcionarios(session):
     # Consultar funcionários com informações de profissões e pessoas
@@ -29,12 +28,12 @@ def listar_funcionarios(session):
     for funcionario in funcionarios:
 
         # Chamar a função de listar pessoa conforme o id
-        listar_pessoa(session, funcionario.id_funcionario)
+        listar_pessoa(session, funcionario.id)
 
         print(f"Profissão: {funcionario.profissao}"
               f"\nData Admissão: {funcionario.data_admissao}"
               f"\nSalário: {funcionario.salario}"
-              f"\nID Funcionário: {funcionario.id_funcionario}\n")
+              f"\nID Funcionário: {funcionario.id}\n")
         print(50 * "=")
 
 
@@ -50,25 +49,14 @@ def adicionar_funcionario(session):
     salario = float(input("Digite o salário: "))
 
     # Criar uma nova instância de Funcionario
-    novo_funcionario = Funcionario(id_funcionario = pessoa.id_pessoa,
+    novo_funcionario = Funcionario(id = pessoa.id,
                                    data_admissao = datetime.now(),
                                    profissao = profissao, 
                                    salario = salario)
 
-    try:
-        # Adicionar o funcionário à sessão e fazer o commit
-        session.add(novo_funcionario)
-        session.commit()
-        print(50 * "-")
-        print(f"Funcionário cadastrado com sucesso! ID Funcionário: {novo_funcionario.id_funcionario}")
-        print(50 * "-")
-
-    except Exception as e:
-        # Em caso de erro, faça o rollback e mostre a mensagem de erro
-        session.rollback()
-        print(50 * "-")
-        print(f"Erro ao cadastrar o funcionário: {e}")
-        print(50 * "-")
+    # Chamar função para inserir cadastro na tabela
+    from models.tabelas import inserir_cadastro
+    return inserir_cadastro(session, 'funcionário', novo_funcionario)
 
 
 def editar_funcionario(session):
@@ -78,13 +66,13 @@ def editar_funcionario(session):
 
     try:
         # Buscar o funcionário pelo ID
-        funcionario = session.query(Funcionario).filter(Funcionario.id_funcionario == pessoa.id_pessoa).one()
+        funcionario = session.query(Funcionario).filter(Funcionario.id == pessoa.id).one()
 
         # Exibir as informações atuais do funcionário
         print(50 * '=')
         print('FUNCIONÁRIO ENCONTRADO')
         print(50 * '-')
-        print(f"ID Funcionário: {funcionario.id_funcionario}")
+        print(f"ID Funcionário: {funcionario.id}")
         print(f"Profissão: {funcionario.profissao}")
         print(f"Salário: {funcionario.salario}")
         print(f"Data Admissão: {funcionario.data_admissao}")

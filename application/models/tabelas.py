@@ -1,12 +1,12 @@
 def inserir_cadastro(session, nome_tabela, dados):
 
     try:
-        # Adicionar o cliente à sessão e fazer o commit
+        # Adicionar os dados à sessão e fazer o commit
         session.add(dados)
         session.commit()
 
         print(50 * "-")
-        print(f"Dados cadastrados com sucesso! ID {nome_tabela}: {dados.id}")
+        print(f"\nDados cadastrados com sucesso! ID {nome_tabela}: {dados.id}")
         print(50 * "-")
 
         return dados
@@ -18,6 +18,8 @@ def inserir_cadastro(session, nome_tabela, dados):
         print(50 * "-")
         print(f"Erro ao cadastrar {nome_tabela}: {e}")
         print(50 * "-")
+
+        executar()
 
 
 
