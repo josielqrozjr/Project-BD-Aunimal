@@ -30,7 +30,6 @@ def listar_especies(session):
         print(50 * "=")    
 
     else:
-
         print(50 * "-")
         verificar_tipo = input("\nEscolha o tipo para listar (GATO | CACHORRO | TODOS): ").strip().upper()
 
@@ -39,7 +38,6 @@ def listar_especies(session):
         print(50 * "=")
 
         for registro in especies:
-
             if verificar_tipo == 'TODOS' or registro.tipo == verificar_tipo:
                 print(f"\nID Espécie: {registro.id}  | ID Raça: {registro.id_raca}  | Tipo: {registro.tipo}")
             
@@ -61,14 +59,15 @@ def adicionar_especie(session):
         especie_pet
     
     if especie_pet == 'S':
-        raca_id = int(input("Digite o ID da raça: "))
-        return raca_id
+        especie_id = int(input("Digite o ID da raça: "))
+        especie = session.query(Especie).filter(Especie.id == especie_id).first()
+        return especie
     
     else:
-        # Coletar dados do novo cadastro em raça
-        classificacao = input("Digite a classificação: ")
+        # Coletar dados do novo cadastro em espécie
+        tipo = input("Digite a espécie (GATO | CACHORRO): ")
 
-        nova_especie = Raca(classificacao = classificacao)
+        nova_especie = Especie(tipo = tipo, id_raca = raca_pet.id)
 
         # Chamar função para inserir cadastro na tabela
         from models.tabelas import inserir_cadastro
