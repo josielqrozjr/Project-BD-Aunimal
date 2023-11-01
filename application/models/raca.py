@@ -47,7 +47,9 @@ def adicionar_raca(session):
     
     if raca_pet == 'S':
         raca_id = int(input("Digite o ID da raça: "))
-        return raca_id
+        raca = session.query(Raca).filter(Raca.id == raca_id).first()
+        
+        return raca
     
     else:
         # Coletar dados do novo cadastro em raça

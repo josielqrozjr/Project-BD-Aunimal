@@ -24,18 +24,26 @@ def listar_especies(session):
 
     especies = session.query(Especie).all()
 
-    print(50 * "=")
-    print("ESPÉCIES CADASTRADAS")
-    print(50 * "=")
+    if not especies:
+        print(50 * "=")
+        print("NÃO EXISTEM ESPÉCIES CADASTRADAS")
+        print(50 * "=")    
 
-    verificar_tipo = input("Escolha o tipo para listar (GATO | CACHORRO | TODOS): ").strip().upper()
+    else:
 
-    for registro in especies:
+        print(50 * "-")
+        verificar_tipo = input("\nEscolha o tipo para listar (GATO | CACHORRO | TODOS): ").strip().upper()
 
-        if verificar_tipo == 'TODOS' or registro.tipo == verificar_tipo:
-            print(f"\nID Espécie: {registro.id}  | ID Raça: {registro.id_raca}  | Tipo: {registro.tipo}")
-        
-    print(50 * "-")
+        print("\n", 50 * "=")
+        print("ESPÉCIES CADASTRADAS")
+        print(50 * "=")
+
+        for registro in especies:
+
+            if verificar_tipo == 'TODOS' or registro.tipo == verificar_tipo:
+                print(f"\nID Espécie: {registro.id}  | ID Raça: {registro.id_raca}  | Tipo: {registro.tipo}")
+            
+        print(50 * "-" + "\n")
 
 
 def adicionar_especie(session):
