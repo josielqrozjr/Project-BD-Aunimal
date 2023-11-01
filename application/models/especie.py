@@ -51,11 +51,9 @@ def adicionar_especie(session):
 
     listar_especies(session)
     
-    especie_pet = input("\nA espécie do seu pet encontra-se na lista acima? (S | N): ").strip().upper()
-
-    while especie_pet != 'S' and especie_pet != 'N':
-        print("\nComando inválido! Digite novamente.")
-        especie_pet = input("A espécie do seu pet encontra-se na lista acima? (S | N): ").strip().upper()
+    # Chamar a função para solicitar resposta do usuário a pergunta específica
+    from models.tabelas import solicitar_resposta
+    especie_pet = solicitar_resposta("A espécie do seu pet encontra-se na lista acima? [S | N]: ")
     
     if especie_pet == 'S':
         especie_id = int(input("\nDigite o ID da espécie: "))
@@ -70,4 +68,4 @@ def adicionar_especie(session):
 
         # Chamar função para inserir cadastro na tabela
         from models.tabelas import inserir_cadastro
-        return inserir_cadastro(session, 'espécie', nova_especie) 
+        return inserir_cadastro(session, 'espécie', nova_especie)

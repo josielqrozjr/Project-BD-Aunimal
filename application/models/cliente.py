@@ -89,8 +89,9 @@ def editar_cliente(session):
 # Função para buscar pessoa associada a tabela cliente
 def buscar_cliente(session):
 
-    # Perguntar se possui cadastro
-    verificar_cadastro = input("\nPossui cadastro como cliente no sistema? [S | N]: ").strip().lower()
+    # Chamar a função para solicitar resposta do usuário a pergunta específica
+    from models.tabelas import solicitar_resposta
+    verificar_cadastro = solicitar_resposta("Possui cadastro como cliente no sistema? [S | N]: ")
 
     if verificar_cadastro == "s":
 

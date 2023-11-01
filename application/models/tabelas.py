@@ -1,5 +1,4 @@
 def inserir_cadastro(session, nome_tabela, dados):
-
     try:
         # Adicionar os dados à sessão e fazer o commit
         session.add(dados)
@@ -20,6 +19,18 @@ def inserir_cadastro(session, nome_tabela, dados):
         print(50 * "-")
 
         executar()
+
+
+# Função para solicitar e verficar uma resposta com resultados de S e N
+def solicitar_resposta(pergunta):
+    print("")
+    resposta = input(pergunta).strip().upper()
+
+    while resposta != 'S' and resposta != 'N':
+        print("\nComando inválido! Digite novamente.")
+        resposta = input(pergunta).strip().upper()
+
+    return resposta
 
 
 
