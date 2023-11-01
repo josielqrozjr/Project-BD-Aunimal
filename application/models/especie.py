@@ -33,15 +33,15 @@ def listar_especies(session):
         print(50 * "-")
         verificar_tipo = input("\nEscolha o tipo para listar (GATO | CACHORRO | TODOS): ").strip().upper()
 
-        print("\n", 50 * "=")
+        print(50 * "=")
         print("ESPÉCIES CADASTRADAS")
         print(50 * "=")
 
         for registro in especies:
             if verificar_tipo == 'TODOS' or registro.tipo == verificar_tipo:
-                print(f"\nID Espécie: {registro.id}  | ID Raça: {registro.id_raca}  | Tipo: {registro.tipo}")
+                print(f"ID Espécie: {registro.id}  | ID Raça: {registro.id_raca}  | Tipo: {registro.tipo}")
             
-        print(50 * "-" + "\n")
+        print(50 * "-")
 
 
 def adicionar_especie(session):
@@ -56,10 +56,10 @@ def adicionar_especie(session):
 
     while especie_pet != 'S' and especie_pet != 'N':
         print("Comando inválido! Digite novamente.")
-        especie_pet
+        especie_pet = input("A espécie do seu pet encontra-se na lista acima? (S | N): ").strip().upper()
     
     if especie_pet == 'S':
-        especie_id = int(input("Digite o ID da raça: "))
+        especie_id = int(input("Digite o ID da espécie: "))
         especie = session.query(Especie).filter(Especie.id == especie_id).first()
         return especie
     
@@ -71,40 +71,4 @@ def adicionar_especie(session):
 
         # Chamar função para inserir cadastro na tabela
         from models.tabelas import inserir_cadastro
-        return inserir_cadastro(session, 'espécie', nova_especie)
-    
-
-def executar():
-    # Iniciar uma sessão
-    from services.db import connection
-    session = connection
-
-    while True:
-        print()
-        print(50 * "=")
-        print()
-        print("\nOpções:")
-        print("1. Adicionar espécie")
-        print("2. Sair")
-
-        escolha = input("Escolha uma opção: ")
-
-        if escolha == "1":
-            print()
-            print(50 * "=")
-            print()
-            adicionar_especie(session)
-        elif escolha == "2":
-            print()
-            print(50 * "=")
-            print()
-            print("Encerrando o programa.")
-            break
-        else:
-            print("Opção inválida. Tente novamente.")
-
-    # Fechar a sessão quando terminar
-    session.close()
-
-if __name__ == "__main__":
-    executar()  
+        return inserir_cadastro(session, 'espécie', nova_especie) 

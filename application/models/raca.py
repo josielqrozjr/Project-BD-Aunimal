@@ -43,7 +43,7 @@ def adicionar_raca(session):
 
     while raca_pet != 'S' and raca_pet != 'N':
         print("Comando inválido! Digite novamente.")
-        raca_pet
+        raca_pet = input("A raça do seu pet encontra-se na lista acima? (S | N): ").strip().upper()
     
     if raca_pet == 'S':
         raca_id = int(input("Digite o ID da raça: "))
