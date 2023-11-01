@@ -57,4 +57,4 @@ def adicionar_raca(session):
 
         # Chamar função para inserir cadastro na tabela
         from models.tabelas import inserir_cadastro
-        return inserir_cadastro(session, 'raça', nova_raca) 
+        return inserir_cadastro(session, 'raça', nova_raca)
