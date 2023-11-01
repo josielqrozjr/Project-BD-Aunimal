@@ -24,7 +24,7 @@ class Pessoa(Base):
     nacionalidade: Mapped[str] = mapped_column(VARCHAR(100), nullable=False, default='BRASIL')
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
     
-    '''def __init__(self, nome, nascimento, cpf, rg, sexo, email, est_civil, nacionalidade, data_criacao):
+    def __init__(self, nome, nascimento, cpf, rg, sexo, email, est_civil, nacionalidade, data_criacao):
        self.nome = nome
        self.nascimento = nascimento
        self.cpf = cpf
@@ -33,7 +33,7 @@ class Pessoa(Base):
        self.email = email 
        self.est_civil = est_civil
        self.nacionalidade = nacionalidade
-       self.data_criacao = data_criacao'''
+       self.data_criacao = data_criacao
 
 
 # Listar as pessoas que estão associadas a tabela passada no parâmetro
@@ -117,7 +117,7 @@ def cadastrar_pessoa(session):
             print("CPF inválido. O CPF deve conter exatamente 11 dígitos numéricos.")
 
     rg = input("Digite o RG: ")
-    sexo = input("Digite o sexo (M/F/NI): ")
+    sexo = input("Digite o sexo (M | F | NI): ")
     email = input("Digite o email: ")
     est_civil = input("Digite o estado civil (SOLTEIRO, CASADO, DIVORCIADO, SEPARADO, VIUVO): ")
     nacionalidade = input("Digite a nacionalidade: ")
@@ -158,6 +158,7 @@ def cadastrar_pessoa(session):
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+        
         print(50 * "-")
         print(f"Erro ao cadastrar os dados pessoais: {e}")
         print(50 * "-")

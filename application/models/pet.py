@@ -7,6 +7,7 @@ from services.db import connection
 from typing import Literal
 import sqlalchemy
 from models.cliente import buscar_cliente
+from models.tabelas import inserir_cadastro
 
 Sexo = Literal['M','F']
 Porte = Literal['PP', 'P', 'M', 'G', 'GG']
@@ -27,9 +28,30 @@ class Pet(Base):
     id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Cliente.id_cliente), nullable=False)
 
 
-def cadastrar_pet(session):
+def adicionar_pet(session):
 
-    buscar_cliente
+    cliente = buscar_cliente(session)
+
+    # Coletar informações do funcionário
+    print(50 * '=')
+    print('FORMULÁRIO PARA CADASTRO DE PET')
+    print(50 * '=')
+    nome = input("Digite a nome: ")
+    peso = float(input("Digite o peso: "))
+    sexo = input("Digite o sexo (M | F): ")
+    pelagem = input("Digite a pelagem: ")
+    porte = input("Digite o porte (PP | P | M | G | GG): ")
+    nascimento = input("Digite a data de nascimento (AAAA-MM-DD): ")
+    descricao = input("Digite a descrição: ")
+
+    # Chamar a função para cadastrar/escolher espécie
+
+
+    # Criar uma nova instância de Pet
+    novo_pet = Cliente(id_cliente = cliente.id_cliente,
+                                   data_criacao = datetime.now())
+
+    
     
     
 

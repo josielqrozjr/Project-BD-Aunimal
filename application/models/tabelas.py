@@ -1,3 +1,26 @@
+def inserir_cadastro(session, nome_tabela, dados):
+
+    try:
+        # Adicionar o cliente à sessão e fazer o commit
+        session.add(dados)
+        session.commit()
+
+        print(50 * "-")
+        print(f"Dados cadastrados com sucesso! ID {nome_tabela}: {dados.id}")
+        print(50 * "-")
+
+        return dados
+
+    except Exception as e:
+        # Em caso de erro, faça o rollback e mostre a mensagem de erro
+        session.rollback()
+        
+        print(50 * "-")
+        print(f"Erro ao cadastrar {nome_tabela}: {e}")
+        print(50 * "-")
+
+
+
 def executar():
     while True:
         print(50*"=")

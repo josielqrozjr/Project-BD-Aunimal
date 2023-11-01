@@ -10,12 +10,10 @@ from models.pessoa import listar_pessoa, buscar_pessoa, editar_pessoa
 class Cliente(Base):
     __tablename__ = "cliente"
     
-    id_cliente: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Pessoa.id_pessoa), primary_key=True, nullable=False)
+    id: Mapped[int] = mapped_column("id_cliente", INTEGER, ForeignKey(Pessoa.id), primary_key=True, nullable=False)
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
 
-
-    def __init__(self, id_cliente, data_criacao):
-        self.id_cliente = id_cliente
+    def __init__(self, data_criacao):
         self.data_criacao = data_criacao
 
 
@@ -37,12 +35,12 @@ def listar_clientes(session):
     for cliente in clientes:
 
         # Chamar a função de listar pessoa conforme o id
-        listar_pessoa(session, cliente.id_cliente)
+        listar_pessoa(session, cliente.id)
 
         dias, meses, anos = tempo_cliente(cliente.data_criacao)
         print(f"Cadastrado em: {cliente.data_criacao}")
         print(f"Cliente há {dias} dias, {meses} meses e {anos} anos.")
-        print(f"ID Cliente: {cliente.id_cliente}\n")
+        print(f"ID Cliente: {cliente.id}\n")
         print(50 * "=")
      
 
@@ -51,20 +49,24 @@ def adicionar_cliente(session):
     pessoa = buscar_pessoa(session)
     
     # Criar uma nova instância de Cliente
-    novo_cliente = Cliente(id_cliente = pessoa.id_pessoa,
+    novo_cliente = Cliente(id = pessoa.id,
                                    data_criacao = datetime.now())
 
     try:
         # Adicionar o cliente à sessão e fazer o commit
         session.add(novo_cliente)
         session.commit()
+
         print(50 * "-")
-        print(f"Cliente cadastrado com sucesso! ID Cliente: {novo_cliente.id_cliente}")
+        print(f"Cliente cadastrado com sucesso! ID Cliente: {novo_cliente.id}")
         print(50 * "-")
+
+        return novo_cliente
 
     except Exception as e:
         # Em caso de erro, faça o rollback e mostre a mensagem de erro
         session.rollback()
+
         print(50 * "-")
         print(f"Erro ao cadastrar o cliente: {e}")
         print(50 * "-")
@@ -118,7 +120,7 @@ def buscar_cliente(session):
                 print(50 * '-')
                 print(f"ID Cliente: {cliente_query.id_cliente}")
                 print(f"Nome: {cliente_query.nome}")
-                print(50 * '=')
+                print(50 * '-')
 
                 return cliente_query
         
