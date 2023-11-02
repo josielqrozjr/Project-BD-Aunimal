@@ -49,7 +49,7 @@ def executar():
         print("6.  Cadastro fácil: Pet e Reserva")
         print("7.  Cadastro fácil: Pet e Serviço")
         print("8.  Cadastro fácil: Reserva e Serviço")
-        print("9. Cadastro fácil: Funcionário e Serviço")
+        print("9.  Cadastro fácil: Funcionário e Serviço")
         print("10. Cadastro fácil: Cobrança e Forma")
         print("11. Sair")
         
