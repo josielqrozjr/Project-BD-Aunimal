@@ -1,3 +1,6 @@
+from services.db import connection
+
+
 def inserir_cadastro(session, nome_tabela, dados):
     try:
         # Adicionar os dados à sessão e fazer o commit
@@ -33,58 +36,67 @@ def solicitar_resposta(pergunta):
     return resposta
 
 
-
 def executar():
     while True:
         print(50*"=")
         print("\nSYSTEM - AUNIMAL HOTEL PET \n")
         print("\nOpções:")
-        print("1. Serviços")
-        print("2. Clientes")
-        print("3. Funcionários")
-        print("4. Profissão")
-        print("5. Pet")
-        print("6. Raça")
-        print("7. Espécie")
-        print("8. Endereço")
-        print("9. Sair")
+        print("1.  Clientes")
+        print("2.  Funcionários")
+        print("3.  Endereço")
+        print("4.  Reservas")
+        print("5.  Pet")
+        print("6.  Cadastro fácil: Pet e Reserva")
+        print("7.  Cadastro fácil: Pet e Serviço")
+        print("8.  Cadastro fácil: Reserva e Serviço")
+        print("9. Cadastro fácil: Funcionário e Serviço")
+        print("10. Cadastro fácil: Cobrança e Forma")
+        print("11. Sair")
         
         escolha = input("Escolha uma opção: ")
-        
-        if escolha == "1":
-            # Importe e execute o módulo correspondente aqui
-            from . import servico
-            servico.executar()
 
-        elif escolha == "2":
+        if escolha == "1":
+            # Importa e executa o módulo correspondente
             from . import cliente
             cliente.executar()
 
-        elif escolha == "3":
+        elif escolha == "2":
             from . import funcionario
             funcionario.executar()
 
+        elif escolha == "3":
+            from . import endereco
+            endereco.executar()
+
         elif escolha == "4":
-            from . import profissao
-            profissao.executar()
+            from . import reserva
+            reserva.executar()
 
         elif escolha == "5":
             from . import pet
             pet.executar()
 
         elif escolha == "6":
-            from . import raca
-            raca.executar()
+            from . import pet_reserva
+            pet_reserva.add_pet_reserva(connection)
 
         elif escolha == "7":
-            from . import especie
-            especie.executar()
+            from . import pet_servico
+            pet_servico.add_pet_servico(connection)
 
         elif escolha == "8":
-            from . import endereco
-            endereco.executar()
-        
+            from . import reserva_servico
+            reserva_servico.add_reserva_serv(connection)
+
         elif escolha == "9":
+            from . import funcionario_servico
+            funcionario_servico.add_func_servico(connection)
+
+        elif escolha == "10":
+            from . import cobranca_forma
+            cobranca_forma.add_cobranca_forma(connection)
+        
+        elif escolha == "11":
             print("Encerrando o programa.")
             break
         else:

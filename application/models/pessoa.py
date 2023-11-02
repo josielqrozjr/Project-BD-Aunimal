@@ -57,10 +57,11 @@ def listar_pessoa(session, pessoa_id):
 # Função para buscar pessoa pelo CPF
 def buscar_pessoa(session):
 
-    # Perguntar se possui cadastro
-    verificar_cadastro = input("Possui dados pessoais cadastrados no sistema? [S | N]: ").strip().lower()
+    # Chamar a função para solicitar resposta do usuário a pergunta específica
+    from models.tabelas import solicitar_resposta
+    verificar_cadastro = solicitar_resposta("Possui dados pessoais cadastrados no sistema? [S | N]: ")
 
-    if verificar_cadastro == "s":
+    if verificar_cadastro == "S":
 
         # Consultar pessoa por CPF
         cpf_pessoa = input("Digite o CPF para consultar: ")
@@ -87,9 +88,11 @@ def buscar_pessoa(session):
         else:
             print(50 * '=')
             print("Cadastro não encontrado!")
-            question_cadastro = input("Deseja realizar o cadastro? [S | N]:").strip().lower()
 
-            if question_cadastro == "s": return cadastrar_pessoa(session)
+            # Chamar a função para solicitar resposta do usuário a pergunta específica
+            question_cadastro = solicitar_resposta("Deseja realizar o cadastro? [S | N]:")
+
+            if question_cadastro == "S": return cadastrar_pessoa(session)
             else: 
                 from models.tabelas import executar
                 executar()

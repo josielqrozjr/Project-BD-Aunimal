@@ -15,7 +15,8 @@ class Funcionario(Base):
     salario: Mapped[float] = mapped_column(DECIMAL(10,2), nullable=False)
 
 
-    def __init__(self, data_admissao, profissao, salario):
+    def __init__(self, id, data_admissao, profissao, salario):
+       self.id = id
        self.data_admissao = data_admissao
        self.profissao = profissao
        self.salario = salario
@@ -100,6 +101,46 @@ def editar_funcionario(session):
         print(f"Erro ao atualizar o funcionário: {e}")
         print(50 * "-")
         
+
+# Função para buscar pessoa associada a tabela funcionário
+def buscar_funcionario(session):
+
+    # Chamar a função para solicitar resposta do usuário a pergunta específica
+    from models.tabelas import solicitar_resposta
+    verificar_cadastro = solicitar_resposta("Possui cadastro como funcionário no sistema? [S | N]: ")
+
+    if verificar_cadastro == "S":
+
+        # Consultar cliente por CPF
+        cpf_pessoa = input("Digite o CPF para consultar: ")
+        func_query = session.query(Pessoa).join(Funcionario, Pessoa.id == Funcionario.id).filter(Pessoa.cpf == cpf_pessoa).first()
+
+        # Verifique se a pessoa foi encontrada
+        if func_query:
+                print(50 * "=")
+                print('FUNCIONÁRIO ENCONTRADO')
+                print(50 * '-')
+                print(f"ID Funcionário: {func_query.id}")
+                print(f"Nome: {func_query.nome}")
+                print(f"Profissão: {func_query.profissao}")
+                print(50 * '-')
+
+                return func_query
+        
+        else:
+            print(50 * '-')
+            print("Cadastro de funcionário não encontrado!")
+
+            # Chamar a função para solicitar resposta do usuário a pergunta específica
+            question_cadastro = solicitar_resposta("Deseja realizar o cadastro? [S | N]:")
+
+            if question_cadastro == "S": return adicionar_funcionario(session)
+            else: 
+                from models.tabelas import executar
+                executar()
+        
+    else: return adicionar_funcionario(session)
+
 
 def executar():
     # Iniciar uma sessão

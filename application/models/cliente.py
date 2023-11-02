@@ -13,10 +13,12 @@ class Cliente(Base):
     id: Mapped[int] = mapped_column("id", INTEGER, ForeignKey(Pessoa.id), primary_key=True, nullable=False)
     data_criacao: Mapped[datetime] = mapped_column(DATETIME, nullable=False, default=datetime.now())
 
-    def __init__(self, data_criacao):
+    def __init__(self, id, data_criacao):
+        self.id = id
         self.data_criacao = data_criacao
 
 
+# Função para calucular tempo de cadastro do cliente
 def tempo_cliente(data_criacao):
     data_atual = datetime.now()
     periodo_cliente = data_atual - data_criacao
@@ -28,6 +30,7 @@ def tempo_cliente(data_criacao):
     return dias, meses, anos
 
 
+# Função para listar os clientes
 def listar_clientes(session):
     # Consultar clientes com suas informações pessoais
     clientes = session.query(Cliente).all()
@@ -44,19 +47,22 @@ def listar_clientes(session):
         print(50 * "=")
      
 
+# Função para cadastrar cliente
 def adicionar_cliente(session):
 
+    # Chamar função para buscar a pessoa associada
     pessoa = buscar_pessoa(session)
     
     # Criar uma nova instância de Cliente
     novo_cliente = Cliente(id = pessoa.id,
-                                   data_criacao = datetime.now())
+                           data_criacao = datetime.now())
 
     # Chamar função para inserir cadastro na tabela
     from models.tabelas import inserir_cadastro
     return inserir_cadastro(session, 'cliente', novo_cliente)    
 
 
+# Função para editar cliente
 def editar_cliente(session):
 
     #Chamar a função para identificar a pessoa correspondente
@@ -69,7 +75,7 @@ def editar_cliente(session):
         # Exibir as informações atuais do funcionário
         print(50 * '=')
         print('CLIENTE ENCONTRADO')
-        print(50 * '-')
+        print(50 * '=')
         print(f"ID Cliente: {cliente.id}")
         print(f"Cadastrado em: {cliente.data_criacao}")
 
@@ -93,7 +99,7 @@ def buscar_cliente(session):
     from models.tabelas import solicitar_resposta
     verificar_cadastro = solicitar_resposta("Possui cadastro como cliente no sistema? [S | N]: ")
 
-    if verificar_cadastro == "s":
+    if verificar_cadastro == "S":
 
         # Consultar cliente por CPF
         cpf_pessoa = input("Digite o CPF para consultar: ")
@@ -113,9 +119,11 @@ def buscar_cliente(session):
         else:
             print(50 * '-')
             print("Cadastro de cliente não encontrado!")
-            question_cadastro = input("Deseja realizar o cadastro? [S | N]:").strip().lower()
 
-            if question_cadastro == "s": return adicionar_cliente(session)
+            # Chamar a função para solicitar resposta do usuário a pergunta específica
+            question_cadastro = solicitar_resposta("Deseja realizar o cadastro? [S | N]:")
+
+            if question_cadastro == "S": return adicionar_cliente(session)
             else: 
                 from models.tabelas import executar
                 executar()

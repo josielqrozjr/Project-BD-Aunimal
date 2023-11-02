@@ -13,7 +13,7 @@ class Contato(Base):
     id: Mapped[int] = mapped_column("id", INTEGER, ForeignKey(Pessoa.id), primary_key=True, nullable=False)
 
     
-    def __init__(self, codigo_pais, codigo_area, numero, id_pessoa):
+    def __init__(self, codigo_pais, codigo_area, numero, id):
         self.codigo_pais = codigo_pais
         self.codigo_area = codigo_area
         self.numero = numero
