@@ -51,25 +51,41 @@ def adicionar_pagamento(session):
     verificar_registro = solicitar_resposta("O pagamento encontra-se na lista acima? (S | N): ")
     
     if verificar_registro == 'S':
-        pag_id = int(input("Digite o ID do funcionário: "))
-        pagamento = session.query(Pagamento).filter(Pagamento.id == pag_id).first()
-        
-        return pagamento
+        print(50 * "=")
+        print("O PAGAMENTO JÁ FOI REALIZADO!")
+        print(50 * "=")
+
+        from models.funcionario import executar
+        executar()        
     
     else:
-        # Coletar dados do novo cadastro em pagamento
-        valor = float(input("Digite o valor: "))
-        mes_ref = input("Digite o mês referente (ex.: AAAA-MM-DD): ")
 
         # Função para buscar o funcionário associado ao pagamento
         from models.funcionario import buscar_funcionario
         func = buscar_funcionario(session)
+
+        # Coletar dados do novo cadastro em pagamento
+        valor = float(input("Digite o valor: "))
+        mes_ref = input("Digite o mês referente (ex.: AAAA-MM-DD): ")
 
         novo_pag = Pagamento(valor=valor,
                              data_pag=datetime.now(),
                              mes_ref=mes_ref,
                              id_funcionario=func.id)
 
-        # Chamar função para inserir cadastro na tabela
-        from models.tabelas import inserir_cadastro
-        return inserir_cadastro(session, 'pagamento', novo_pag)
+    try:
+        # Adicionar os dados à sessão e fazer o commit
+        session.add(novo_pag)
+        session.commit()
+
+        print(50 * "-")
+        print(f"\nDados cadastrados com sucesso! ID Funcionário: {novo_pag.id_funcionario}\n")
+        print(50 * "-")
+
+    except Exception as e:
+        # Em caso de erro, faça o rollback e mostre a mensagem de erro
+        session.rollback()
+        
+        print(50 * "-")
+        print(f"Erro ao cadastrar pagamento: {e}")
+        print(50 * "-")
