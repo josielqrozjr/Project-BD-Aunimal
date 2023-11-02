@@ -107,6 +107,47 @@ def editar_endereco(session):
         print(50 * "-")
 
 
+def listar_enderecos(session):
+
+    enderecos = session.query(Endereco).all()
+
+    if not enderecos:
+        print(50 * "=")
+        print("NÃO EXISTEM ENDEREÇOS REGISTRADOS")
+        print(50 * "=")
+
+    else:
+        print(50 * "=")
+        print("ENDEREÇOS REGISTRADOS")
+        print(50 * "=")
+
+        for registro in enderecos:
+            print(f"ID Endereço: {registro.id}\n"
+                  f"ID Pessoa: {registro.id_pessoa}")
+     
+        print(50 * "-")
+
+
+def excluir_endereco(session):
+
+    listar_enderecos(session)
+    endereco_id = int(input("Digite o ID: "))
+
+    try:
+        # Excluir
+        session.query(Endereco).filter(Endereco.id == id).delete()
+
+        # Confirmar a exclusão
+        session.commit()
+        print(f"\nRegistro excluído com sucesso. ID endereço: {endereco_id}\n")
+
+    except Exception as e:
+        # Em caso de erro, faça o rollback e mostre a mensagem de erro
+        session.rollback()
+        print(f"\nErro ao excluir registro de endereço: {e}\n")
+    
+
+
 def executar():
     # Iniciar uma sessão
     session = connection
@@ -117,7 +158,8 @@ def executar():
         print()
         print("\nOpções:")
         print("1. Editar endereço")
-        print("2. Sair")
+        print("2. Excluir endereço")
+        print("3. Sair")
 
         escolha = input("Escolha uma opção: ")
 
@@ -127,6 +169,11 @@ def executar():
             print()
             editar_endereco(session)
         elif escolha == "2":
+            print()
+            print(50 * "=")
+            print()
+            excluir_endereco(session)
+        elif escolha == "3":
             print()
             print(50 * "=")
             print()
