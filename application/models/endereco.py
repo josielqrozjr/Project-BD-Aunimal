@@ -135,7 +135,7 @@ def excluir_endereco(session):
 
     try:
         # Excluir
-        session.query(Endereco).filter(Endereco.id == id).delete()
+        session.query(Endereco).filter(Endereco.id == endereco_id).delete()
 
         # Confirmar a exclusão
         session.commit()

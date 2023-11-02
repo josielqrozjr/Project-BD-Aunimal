@@ -156,7 +156,8 @@ def executar():
         print("3. Editar funcionário")
         print("4. Adicionar pagamento")
         print("5. Listar pagamentos")
-        print("6. Sair")
+        print("6. Excluir pagamento")
+        print("7. Sair")
 
         escolha = input("Escolha uma opção: ")
 
@@ -188,6 +189,12 @@ def executar():
             from models.pagamento import listar_pagamentos
             listar_pagamentos(session)
         elif escolha == "6":
+            print()
+            print(50 * "=")
+            print()
+            from models.pagamento import excluir_pagamento
+            excluir_pagamento(session)
+        elif escolha == "7":
             print()
             print(50 * "=")
             print()

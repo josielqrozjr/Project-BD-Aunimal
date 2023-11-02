@@ -89,3 +89,22 @@ def adicionar_pagamento(session):
         print(50 * "-")
         print(f"Erro ao cadastrar pagamento: {e}")
         print(50 * "-")
+
+
+def excluir_pagamento(session):
+
+    listar_pagamentos(session)
+    pag_id = int(input("Digite o ID: "))
+
+    try:
+        # Excluir
+        session.query(Pagamento).filter(Pagamento.id == pag_id).delete()
+
+        # Confirmar a exclusão
+        session.commit()
+        print(f"\nRegistro excluído com sucesso. ID pagamento: {pag_id}\n")
+
+    except Exception as e:
+        # Em caso de erro, faça o rollback e mostre a mensagem de erro
+        session.rollback()
+        print(f"\nErro ao excluir registro de pagamento: {e}\n")
