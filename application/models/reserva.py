@@ -3,6 +3,7 @@ from sqlalchemy import DATETIME, DECIMAL, VARCHAR, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.mysql import INTEGER
 from datetime import datetime
+from sqlalchemy import func, desc
 
 class Reserva(Base):
     __tablename__ = "reserva"
@@ -166,6 +167,13 @@ def buscar_reserva(session):
     else: return add_reserva(session)
 
 
+def maior_numero(session):
+
+    query = session.query(Reserva.id_cliente, func.count(Reserva.id_cliente).label("Quantidade")).select_from(Reserva).group_by(Reserva.id_cliente).order_by(desc("Quantidade")).first()
+
+    print(query)
+
+
 def executar():
     # Iniciar uma sessão
     from services.db import connection
@@ -179,7 +187,8 @@ def executar():
         print("1. Listar reservas")
         print("2. Adicionar reserva")
         print("3. Buscar reserva")
-        print("4. Sair")
+        print("4. Maior reserva")
+        print("5. Sair")
 
         escolha = input("Escolha uma opção: ")
 
@@ -199,6 +208,11 @@ def executar():
             print()
             buscar_reserva(session)
         elif escolha == "4":
+            print()
+            print(50 * "=")
+            print()
+            maior_numero(session)
+        elif escolha == "5":
             print()
             print(50 * "=")
             print()
